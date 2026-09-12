@@ -32,6 +32,7 @@ extends Node2D
 @onready var _bouton_rejouer_defaite: Button = $CanvasLayer/EcranDefaite/BoiteD/BoutonRejouerDefaite
 
 @onready var _lave_pulsante: Polygon2D = $Monde/Destination/LavePulsante
+@onready var _boite_dialogue: GestionnaireDialogues = $CanvasLayer/BoiteDialogue
 
 const DESTINATION := Vector2(3000, 3000)
 const SPAWN_PORTEUR := Vector2(490, 420)
@@ -40,6 +41,8 @@ const SPAWN_GUIDE := Vector2(390, 470)
 var _porteur: CharacterBody2D
 var _guide: CharacterBody2D
 var _partie_terminee := false
+var _prologue_joue := false
+
 
 func _ready() -> void:
 	# On cache l'UI de jeu au début, on montre celle de connexion.
@@ -188,7 +191,38 @@ func _sur_connexion_etablie() -> void:
 		camera.position = Vector2.ZERO
 		camera.make_current()
 
+	# Lancement du Prologue Gandalf (synchronisé)
+	if NetworkManager.est_hote and not _prologue_joue:
+		_prologue_joue = true
+		_lancer_prologue()
+
+func _lancer_prologue() -> void:
+	var repliques := [
+		{
+			"locuteur": "Gandalf",
+			"portrait": "gandalf",
+			"texte": "Frodon, l'Anneau de Bilbon n'est pas une babiole... C'est l'Anneau Unique forgé par Sauron !"
+		},
+		{
+			"locuteur": "Frodon",
+			"portrait": "frodon",
+			"texte": "Mais Gandalf... où dois-je aller ? Je ne suis qu'un simple hobbit de la Comté..."
+		},
+		{
+			"locuteur": "Sam",
+			"portrait": "sam",
+			"texte": "M'sieur Frodon n'ira nulle part sans moi ! M. Gandalf m'a fait promettre de ne pas vous quitter d'une semelle !"
+		},
+		{
+			"locuteur": "Gandalf",
+			"portrait": "gandalf",
+			"texte": "Hâtez-vous vers l'est. Et surtout, Frodon... ne cède pas à la tentation de passer l'Anneau à ton doigt !"
+		}
+	]
+	_boite_dialogue.demarrer_dialogue(repliques)
+
 func _sur_deconnexion() -> void:
+
 	_ui_connexion.show()
 	_ui_jeu.hide()
 	_label_statut.text = "L'autre joueur s'est déconnecté."

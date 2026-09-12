@@ -1,0 +1,47 @@
+{
+  "prologue_gandalf": {
+    "repliques": [
+      {
+        "locuteur": "Gandalf",
+        "portrait": "gandalf",
+        "texte": "Frodon, l'Anneau de Bilbon n'est pas une simple babiole. C'est l'Anneau Unique forgé par Sauron !"
+      },
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon_inquiet",
+        "texte": "Mais Gandalf... pourquoi Bilbon me l'a-t-il laissé ? Je ne suis qu'un simple hobbit !"
+      },
+      {
+        "locuteur": "Sam",
+        "portrait": "sam_determine",
+        "texte": "M'sieur Frodon n'ira nulle part sans moi ! M. Gandalf m'a fait promettre de ne jamais vous quitter !"
+      },
+      {
+        "locuteur": "Gandalf",
+        "portrait": "gandalf",
+        "texte": "Hâtez-vous vers l'est, jusqu'à Bree. Et surtout... ne cédez pas à la tentation de passer l'Anneau à votre doigt."
+      }
+    ]
+  },
+  "choix_route_foret": {
+    "titre_choix": "Un grondement sourd approche... Quel chemin emprunter ?",
+    "options": [
+      {
+        "id": "foret",
+        "label": "🌲 Couper à travers la Vieille Forêt",
+        "desc": "Brumeux et sombre (+10% corruption), mais évite le Cavalier Noir.",
+        "delta_corruption": 10,
+        "objet_obtenu": "herbes_soin",
+        "replique_reaction": "Vous vous enfoncez sous les vieux arbres noueux... L'air devient lourd."
+      },
+      {
+        "id": "route",
+        "label": "🛣️ Suivre la route marchande",
+        "desc": "Chemin dégagé, mais un Cavalier Noir patrouille non loin !",
+        "delta_corruption": 0,
+        "objet_obtenu": "",
+        "replique_reaction": "Vous restez à découvert... Le pas lourd d'un coursier noir résonne dans la nuit."
+      }
+    ]
+  }
+}

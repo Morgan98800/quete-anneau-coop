@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/spectre.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personnages/nazgul.png" id="2"]
 
 [sub_resource type="CircleShape2D" id="corps_col"]
 radius = 18.0
@@ -22,42 +23,20 @@ shape = SubResource("corps_col")
 shape = SubResource("detect_col")
 
 [node name="Ombre" type="Polygon2D" parent="."]
-position = Vector2(0, 22)
-color = Color(0, 0, 0, 0.4)
+position = Vector2(0, 18)
+color = Color(0, 0, 0, 0.45)
 polygon = PackedVector2Array(-16, 0, -10, 5, 10, 5, 16, 0, 10, -5, -10, -5)
 
 [node name="Aura" type="Polygon2D" parent="."]
-color = Color(0.6, 0.05, 0.05, 0.15)
-polygon = PackedVector2Array(0, -36, 26, -24, 34, 0, 26, 24, 0, 36, -26, 24, -34, 0, -26, -24)
+color = Color(0.6, 0.05, 0.05, 0.2)
+polygon = PackedVector2Array(0, -32, 22, -22, 30, 0, 22, 22, 0, 32, -22, 22, -30, 0, -22, -22)
 
 [node name="Visuel" type="Node2D" parent="."]
 
-[node name="Cape" type="Polygon2D" parent="Visuel"]
-color = Color(0.12, 0.1, 0.14, 1)
-polygon = PackedVector2Array(-14, -14, 14, -14, 20, 12, 14, 26, 0, 18, -14, 26, -20, 12)
-
-[node name="Capuche" type="Polygon2D" parent="Visuel"]
-position = Vector2(0, -16)
-color = Color(0.08, 0.06, 0.1, 1)
-polygon = PackedVector2Array(0, -16, 12, -8, 10, 8, -10, 8, -12, -8)
-
-[node name="OmbreCapuche" type="Polygon2D" parent="Visuel"]
-position = Vector2(0, -15)
-color = Color(0.02, 0.01, 0.03, 1)
-polygon = PackedVector2Array(0, -10, 8, -4, 6, 6, -6, 6, -8, -4)
-
-[node name="Yeux" type="Node2D" parent="Visuel"]
-position = Vector2(0, -14)
-
-[node name="OeilG" type="Polygon2D" parent="Visuel/Yeux"]
-position = Vector2(-3, 0)
-color = Color(1, 0.2, 0.2, 1)
-polygon = PackedVector2Array(-2, -1, 2, -1, 1, 2, -1, 2)
-
-[node name="OeilD" type="Polygon2D" parent="Visuel/Yeux"]
-position = Vector2(3, 0)
-color = Color(1, 0.2, 0.2, 1)
-polygon = PackedVector2Array(-2, -1, 2, -1, 1, 2, -1, 2)
+[node name="SpriteGBA" type="Sprite2D" parent="Visuel"]
+texture_filter = 1
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("2")
 
 [node name="Alerte" type="Label" parent="."]
 offset_left = -20.0
