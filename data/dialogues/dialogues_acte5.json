@@ -1,0 +1,63 @@
+{
+  "sommet_mont_destin": {
+    "repliques": [
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "Nous y voici... Les Sammath Naur. La lave est juste sous mes pieds."
+      },
+      {
+        "locuteur": "Sam",
+        "portrait": "sam",
+        "texte": "Jetez-le, m'sieur Frodon ! Détruisez-le une bonne fois pour toutes et rentrons à la maison !"
+      },
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "Non... C'est trop lourd. Il murmure à mon âme... L'Anneau est mien !"
+      }
+    ]
+  },
+  "fin_canon": {
+    "repliques": [
+      {
+        "locuteur": "Gollum",
+        "portrait": "gollum",
+        "texte": "Mon Précieux ! Il est à nous ! À noooouuuus !"
+      },
+      {
+        "locuteur": "Sam",
+        "portrait": "sam",
+        "texte": "Regardez, m'sieur Frodon ! Il a sauté sur votre main... et il trébuche dans le gouffre !"
+      },
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "C'est fini, Sam... L'Anneau est détruit. L'Ombre s'effondre."
+      }
+    ]
+  },
+  "fin_amitie": {
+    "repliques": [
+      {
+        "locuteur": "Sam",
+        "portrait": "sam",
+        "texte": "Frodon, écoutez-moi ! Pensez à la Comté, aux cerisiers en fleur, à l'auberge du Lierre Vert !"
+      },
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "Sam... ta voix... Oui, je me souviens de la lumière. Va-t'en dans les ténèbres, Sauron !"
+      }
+    ]
+  },
+  "fin_tenebres": {
+    "repliques": [
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "Trop tard, Samwise. Un nouveau Seigneur Noir s'élève sur la Terre du Milieu..."
+      }
+    ]
+  }
+}

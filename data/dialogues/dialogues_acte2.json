@@ -1,0 +1,57 @@
+{
+  "intro_bree": {
+    "repliques": [
+      {
+        "locuteur": "Grand-Pas",
+        "portrait": "aragorn",
+        "texte": "Vous attirez trop l'attention, petits maîtres. Les Cavaliers Noirs rôdent tout autour de Bree."
+      },
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "Qui êtes-vous ? Comment savons-nous que nous pouvons vous faire confiance ?"
+      },
+      {
+        "locuteur": "Sam",
+        "portrait": "sam",
+        "texte": "Moi je garde ma poêle à portée de main, m'sieur Frodon... Il a l'air bien trop agile !"
+      }
+    ]
+  },
+  "choix_grandpas": {
+    "titre_choix": "Faire confiance à ce mystérieux Rôdeur ?",
+    "options": [
+      {
+        "id": "confiance",
+        "label": "🤝 Lui faire confiance et le suivre",
+        "desc": "Grand-Pas vous guide et offre une torche enflammée pour repousser les spectres.",
+        "bonus_def": true
+      },
+      {
+        "id": "mefiance",
+        "label": "🏃 Fuir seuls dans la nuit",
+        "desc": "Vous partez seuls vers le Mont Venteux. L'assaut sera plus périlleux !",
+        "bonus_def": false
+      }
+    ]
+  },
+  "attaque_mont_venteux": {
+    "repliques": [
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "Le vent est glacial... Regardez au sommet des ruines ! Des silhouettes noires approchent !"
+      },
+      {
+        "locuteur": "Roi-Sorcier",
+        "portrait": "nazgul",
+        "texte": "Rends-le... Porte-le à ton doigt et soumets-toi au Maître !"
+      },
+      {
+        "locuteur": "Sam",
+        "portrait": "sam",
+        "texte": "Arrière, démons ! Vous ne toucherez pas à M'sieur Frodon tant que je respire !"
+      }
+    ]
+  }
+}

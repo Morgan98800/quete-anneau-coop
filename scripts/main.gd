@@ -1,11 +1,10 @@
 extends Node2D
 ## ============================================================
-## Main.gd — Chef d'orchestre de la scène.
-## Gère l'interface de connexion, les boutons de jeu,
-## et relie les personnages au NetworkManager.
+## Main.gd — Chef d'orchestre de la Quête de l'Anneau.
+## Gère la progression des 5 micro-actes, l'interface GBA,
+## les dialogues, les choix moraux et le multijoueur/solo.
 ## ============================================================
 
-# Références aux nœuds de l'interface (à remplir dans l'éditeur)
 @onready var _ui_connexion: Control = $CanvasLayer/UIConnexion
 @onready var _ui_jeu: Control = $CanvasLayer/UIJeu
 @onready var _label_statut: Label = $CanvasLayer/UIConnexion/CadreParcho/VBox/LabelStatut
@@ -23,52 +22,50 @@ extends Node2D
 @onready var _label_corruption: Label = $CanvasLayer/UIJeu/LabelCorruption
 @onready var _bouton_action: Button = $CanvasLayer/UIJeu/BoutonAction
 
-
 @onready var _fleche_boussole: Polygon2D = $CanvasLayer/UIJeu/Boussole/FlecheBoussole
 @onready var _label_boussole: Label = $CanvasLayer/UIJeu/Boussole/LabelBoussole
 @onready var _label_allie: Label = $CanvasLayer/UIJeu/LabelAllie
 
 @onready var _ecran_victoire: Control = $CanvasLayer/EcranVictoire
+@onready var _titre_v: Label = $CanvasLayer/EcranVictoire/BoiteV/TitreV
+@onready var _desc_v: Label = $CanvasLayer/EcranVictoire/BoiteV/DescV
 @onready var _bouton_rejouer_victoire: Button = $CanvasLayer/EcranVictoire/BoiteV/BoutonRejouerVictoire
+
 @onready var _ecran_defaite: Control = $CanvasLayer/EcranDefaite
 @onready var _bouton_rejouer_defaite: Button = $CanvasLayer/EcranDefaite/BoiteD/BoutonRejouerDefaite
 
-@onready var _lave_pulsante: Polygon2D = $Monde/Destination/LavePulsante
 @onready var _boite_dialogue: GestionnaireDialogues = $CanvasLayer/BoiteDialogue
-
-const DESTINATION := Vector2(3000, 3000)
-const SPAWN_PORTEUR := Vector2(490, 420)
-const SPAWN_GUIDE := Vector2(390, 470)
+@onready var _banniere_acte: Control = $CanvasLayer/BanniereTitreActe
+@onready var _monde: Node2D = $Monde
+@onready var _gestionnaire_actes: GestionnaireActes = $GestionnaireActes
 
 var _porteur: CharacterBody2D
 var _guide: CharacterBody2D
 var _partie_terminee := false
-var _prologue_joue := false
 
+var _dernier_dialogue_cle: String = ""
+var _choix_intermediaire_fait := false
+var _evenement_secondaire_fait := false
+var _fin_declenchee := false
 
 func _ready() -> void:
-	# On cache l'UI de jeu au début, on montre celle de connexion.
 	_ui_jeu.hide()
 	_ui_connexion.show()
 	_conteneur_manuel.hide()
 	_ecran_victoire.hide()
 	_ecran_defaite.hide()
 	
-	# Connexion des signaux du NetworkManager.
 	NetworkManager.code_pret.connect(_sur_code_pret)
 	NetworkManager.connexion_etablie.connect(_sur_connexion_etablie)
 	NetworkManager.deconnexion.connect(_sur_deconnexion)
 	NetworkManager.statut_change.connect(_sur_statut_change)
 	
-	# Connexion des signaux de la Corruption.
 	Corruption.corruption_changee.connect(_sur_corruption_changee)
 	Corruption.corruption_max.connect(_sur_corruption_max)
 	
-	# Connexion des boutons de l'interface.
 	_bouton_solo.pressed.connect(_sur_bouton_solo)
 	_bouton_creer.pressed.connect(_sur_bouton_creer_auto)
 	_bouton_rejoindre.pressed.connect(_sur_bouton_rejoindre_auto)
-
 	_bouton_plein_ecran.pressed.connect(_basculer_plein_ecran)
 	_bouton_plein_ecran_jeu.pressed.connect(_basculer_plein_ecran)
 	_bouton_basculer_manuel.pressed.connect(_sur_basculer_manuel)
@@ -78,12 +75,14 @@ func _ready() -> void:
 	_bouton_rejouer_victoire.pressed.connect(_sur_rejouer_clic)
 	_bouton_rejouer_defaite.pressed.connect(_sur_rejouer_clic)
 
-	# On récupère les instances des personnages placés dans la scène.
 	_porteur = get_node_or_null("Porteur")
 	_guide = get_node_or_null("Guide")
 
+	_gestionnaire_actes.initialiser(_monde, _banniere_acte)
+	_gestionnaire_actes.acte_change.connect(_sur_acte_change)
+	_boite_dialogue.choix_valide.connect(_sur_choix_valide)
+	_boite_dialogue.dialogue_termine.connect(_sur_dialogue_termine)
 	
-	# Sur le Web : permet de rejoindre directement via un lien ?code=...
 	if OS.has_feature("web"):
 		var code_url: Variant = JavaScriptBridge.eval("new URLSearchParams(location.search).get('code')")
 		if code_url is String and not code_url.is_empty():
@@ -109,7 +108,6 @@ func _sur_bouton_creer_auto() -> void:
 	_bouton_rejoindre.disabled = true
 	NetworkManager.lancer_auto_hote()
 
-
 func _sur_bouton_rejoindre_auto() -> void:
 	SonChiptune.jouer_clic()
 	_bouton_creer.disabled = true
@@ -128,7 +126,7 @@ func _sur_bouton_valider_manuel() -> void:
 		return
 	NetworkManager.mode_auto = false
 	if NetworkManager.est_hote and code.contains("\"offre\""):
-		_label_statut.text = "Tu es l'hôte ! Tu dois attendre le code RÉPONSE du Joueur 2."
+		_label_statut.text = "Tu es l'hôte ! Attends la RÉPONSE du Joueur 2."
 		return
 	if code.contains("\"offre\""):
 		_label_statut.text = "Offre reçue ! Génération de la réponse..."
@@ -136,33 +134,22 @@ func _sur_bouton_valider_manuel() -> void:
 		_bouton_rejoindre.disabled = true
 		NetworkManager.rejoindre_session(code)
 	elif code.contains("\"reponse\""):
-		_label_statut.text = "Réponse reçue ! Finalisation de la connexion P2P..."
+		_label_statut.text = "Réponse reçue ! Finalisation P2P..."
 		NetworkManager.appliquer_reponse(code)
-	else:
-		_label_statut.text = "Code invalide ! Assure-toi de copier l'intégralité du texte JSON."
 
 func _sur_code_pret(texte_code: String, est_une_reponse: bool) -> void:
 	if not NetworkManager.mode_auto:
-		if est_une_reponse:
-			_label_statut.text = "Étape 2 : Réponse générée ! Copie ce code et renvoie-le à l'hôte."
-		else:
-			_label_statut.text = "Étape 1 : Code généré ! Copie-le et envoie-le au Joueur 2."
+		_label_statut.text = "Code généré ! Copie-le et envoie-le."
 		_champ_code.text = texte_code
 		_bouton_copier.show()
-	
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.__codeSession=" + JSON.stringify(texte_code))
 
 func _sur_bouton_copier() -> void:
 	_copier_texte(_champ_code.text)
-	_label_statut.text = "Code copié ! Envoie-le par message."
+	_label_statut.text = "Code copié !"
 
-
-## Copie un texte dans le presse-papier, de façon fiable sur le Web.
 func _copier_texte(texte: String) -> void:
-	# Sur le Web, DisplayServer.clipboard_set n'est pas fiable : on passe
-	# par l'API Clipboard du navigateur (exige un geste utilisateur — le
-	# clic sur ce bouton — et un contexte sécurisé HTTPS, OK sur itch.io).
 	if OS.has_feature("web"):
 		var navigateur = JavaScriptBridge.get_interface("navigator")
 		if navigateur and navigateur.clipboard:
@@ -189,19 +176,16 @@ func _basculer_plein_ecran() -> void:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 
 func _sur_connexion_etablie() -> void:
-
 	_ui_connexion.hide()
 	_ui_jeu.show()
-	# On configure le bouton d'action selon notre rôle.
 	if NetworkManager.joue_porteur:
 		_bouton_action.text = "Invisibilité"
 	else:
 		_bouton_action.text = "Soigner"
 	_label_statut.text = "Connectés !"
-	# Sur le Web, on signale l'état à la page (tests automatisés, debug).
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.__connecte=true")
-	# La caméra suit NOTRE personnage.
+
 	var joueur_local: Node2D = _porteur if NetworkManager.joue_porteur else _guide
 	if joueur_local:
 		var camera: Camera2D = get_node("Camera2D")
@@ -210,38 +194,94 @@ func _sur_connexion_etablie() -> void:
 		camera.zoom = Vector2(2.2, 2.2)
 		camera.make_current()
 
-	# Lancement du Prologue Gandalf (synchronisé)
-	if NetworkManager.est_hote and not _prologue_joue:
-		_prologue_joue = true
-		_lancer_prologue()
+	# Démarrer la campagne à l'Acte 1
+	_gestionnaire_actes.demarrer_campagne()
+	_sur_acte_change(1)
 
-func _lancer_prologue() -> void:
-	var repliques := [
-		{
-			"locuteur": "Gandalf",
-			"portrait": "gandalf",
-			"texte": "Frodon, l'Anneau de Bilbon n'est pas une babiole... C'est l'Anneau Unique forgé par Sauron !"
-		},
-		{
-			"locuteur": "Frodon",
-			"portrait": "frodon",
-			"texte": "Mais Gandalf... où dois-je aller ? Je ne suis qu'un simple hobbit de la Comté..."
-		},
-		{
-			"locuteur": "Sam",
-			"portrait": "sam",
-			"texte": "M'sieur Frodon n'ira nulle part sans moi ! M. Gandalf m'a fait promettre de ne pas vous quitter d'une semelle !"
-		},
-		{
-			"locuteur": "Gandalf",
-			"portrait": "gandalf",
-			"texte": "Hâtez-vous vers l'est. Et surtout, Frodon... ne cède pas à la tentation de passer l'Anneau à ton doigt !"
-		}
-	]
-	_boite_dialogue.demarrer_dialogue(repliques)
+func _sur_acte_change(numero: int) -> void:
+	_choix_intermediaire_fait = false
+	_evenement_secondaire_fait = false
+	_fin_declenchee = false
+
+	# Lancement du dialogue d'ouverture de l'acte
+	match numero:
+		1:
+			_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte1.json", "prologue_gandalf")
+		2:
+			_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte2.json", "intro_bree")
+		3:
+			_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte3.json", "portes_durin")
+		4:
+			_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte4.json", "rencontre_gollum")
+		5:
+			_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte5.json", "sommet_mont_destin")
+
+func _lancer_dialogue_fichier(chemin_json: String, cle: String) -> void:
+	var f := FileAccess.open(chemin_json, FileAccess.READ)
+	if not f:
+		return
+	var contenu := f.get_as_text()
+	var json := JSON.new()
+	if json.parse(contenu) != OK:
+		return
+	var donnees: Dictionary = json.data
+	if donnees.has(cle):
+		_dernier_dialogue_cle = cle
+		var bloc: Dictionary = donnees[cle]
+		if bloc.has("repliques"):
+			_boite_dialogue.demarrer_dialogue(bloc["repliques"])
+		elif bloc.has("options"):
+			_boite_dialogue.proposer_choix(bloc)
+
+func _sur_choix_valide(id_choix: String) -> void:
+	match id_choix:
+		"foret":
+			_gestionnaire_actes.choix_route_acte1 = "foret"
+			Corruption.valeur = minf(Corruption.MAX, Corruption.valeur + 10.0)
+			Corruption.corruption_changee.emit(Corruption.valeur)
+		"route":
+			_gestionnaire_actes.choix_route_acte1 = "route"
+		"confiance":
+			_gestionnaire_actes.choix_grandpas_acte2 = true
+		"mefiance":
+			_gestionnaire_actes.choix_grandpas_acte2 = false
+		"epargne":
+			_gestionnaire_actes.choix_gollum_acte4 = "epargne"
+			Corruption.valeur = maxf(0.0, Corruption.valeur - 15.0)
+			Corruption.corruption_changee.emit(Corruption.valeur)
+		"chasse":
+			_gestionnaire_actes.choix_gollum_acte4 = "chasse"
+			Corruption.valeur = minf(Corruption.MAX, Corruption.valeur + 5.0)
+			Corruption.corruption_changee.emit(Corruption.valeur)
+
+func _sur_dialogue_termine() -> void:
+	match _dernier_dialogue_cle:
+		"intro_bree":
+			_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte2.json", "choix_grandpas")
+		"rencontre_gollum":
+			_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte4.json", "choix_gollum")
+		"sommet_mont_destin":
+			var fin: String = _gestionnaire_actes.calculer_type_fin()
+			_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte5.json", fin)
+		"fin_canon", "fin_amitie", "fin_tenebres":
+			_afficher_victoire_personnalisee(_dernier_dialogue_cle)
+
+func _afficher_victoire_personnalisee(type_fin: String) -> void:
+	_partie_terminee = true
+	SonChiptune.jouer_victoire()
+	match type_fin:
+		"fin_canon":
+			_titre_v.text = "🏆 FIN CANONIQUE : LA CHUTE DU PRÉCIEUX"
+			_desc_v.text = "Gollum a bondi sur Frodon, arraché l'Anneau et basculé dans le magma !\nLa Terre du Milieu est libre. Merci pour votre coopération héroïque !"
+		"fin_amitie":
+			_titre_v.text = "💖 FIN FRATERNELLE : L'AMITIÉ DE SAM"
+			_desc_v.text = "Les douces paroles de Sam ont brisé le charme de Sauron !\nFrodon a trouvé le courage de jeter lui-même l'Anneau dans la Crevasse !"
+		"fin_tenebres":
+			_titre_v.text = "🌑 FIN SOMBRE : LE SEIGNEUR DE L'ANNEAU"
+			_desc_v.text = "La corruption était trop lourde... Frodon a passé l'Anneau à son doigt et revendique la couronne de Barad-dûr."
+	_ecran_victoire.show()
 
 func _sur_deconnexion() -> void:
-
 	_ui_connexion.show()
 	_ui_jeu.hide()
 	_label_statut.text = "L'autre joueur s'est déconnecté."
@@ -268,12 +308,6 @@ func _sur_rejouer_clic() -> void:
 		_recommencer_partie.rpc()
 
 @rpc("any_peer", "call_local", "reliable")
-func _declencher_victoire() -> void:
-	_partie_terminee = true
-	SonChiptune.jouer_victoire()
-	_ecran_victoire.show()
-
-@rpc("any_peer", "call_local", "reliable")
 func _declencher_defaite() -> void:
 	_partie_terminee = true
 	SonChiptune.jouer_defaite()
@@ -286,13 +320,10 @@ func _recommencer_partie() -> void:
 	_ecran_defaite.hide()
 	Corruption.reinitialiser()
 	if _porteur:
-		_porteur.global_position = SPAWN_PORTEUR
-		_porteur.velocity = Vector2.ZERO
 		_porteur.invisible = false
 		_porteur._appliquer_apparence()
-	if _guide:
-		_guide.global_position = SPAWN_GUIDE
-		_guide.velocity = Vector2.ZERO
+	_gestionnaire_actes.demarrer_campagne()
+	_sur_acte_change(1)
 
 func _sur_bouton_action() -> void:
 	if not NetworkManager.connecte or _partie_terminee:
@@ -302,46 +333,43 @@ func _sur_bouton_action() -> void:
 	else:
 		if _guide: _guide.interagir()
 
-
 func _process(_delta: float) -> void:
-	# Animation du cratère de lave
-	if _lave_pulsante:
-		var pulse := 1.0 + 0.1 * sin(Time.get_ticks_msec() * 0.003)
-		_lave_pulsante.scale = Vector2(pulse, pulse)
-
-	# Mise à jour du HUD en jeu
-	if NetworkManager.connecte and not _partie_terminee:
-		var joueur_local: Node2D = _porteur if NetworkManager.joue_porteur else _guide
-		if joueur_local:
-			var dist_dest := joueur_local.global_position.distance_to(DESTINATION)
-			_label_boussole.text = "Montagne du Destin : %d m" % int(dist_dest)
-			_fleche_boussole.rotation = (DESTINATION - joueur_local.global_position).angle()
-		
-		if _porteur and _guide:
-			var dist_allie := _porteur.global_position.distance_to(_guide.global_position)
-			_label_allie.text = "👥 Allié : %d m" % int(dist_allie)
-			
-			# Vérification de victoire : les deux joueurs doivent atteindre le cratère (ou Frodon en solo)
-			if NetworkManager.est_hote and not _partie_terminee:
-				var condition_victoire: bool = false
-				if NetworkManager.mode_solo:
-					condition_victoire = _porteur.global_position.distance_to(DESTINATION) < 180.0
-				else:
-					condition_victoire = (_porteur.global_position.distance_to(DESTINATION) < 180.0 \
-							and _guide.global_position.distance_to(DESTINATION) < 180.0)
-				if condition_victoire:
-					if NetworkManager.mode_solo:
-						_declencher_victoire()
-					else:
-						_declencher_victoire.rpc()
-
-	# Pont Web de signalisation (reprise de réponse manuelle si besoin)
-	if not OS.has_feature("web"):
+	if not NetworkManager.connecte or _partie_terminee:
 		return
-	if not NetworkManager.est_hote or NetworkManager.connecte:
+
+	var joueur_local: Node2D = _porteur if NetworkManager.joue_porteur else _guide
+	if not joueur_local:
 		return
-	var reponse: Variant = JavaScriptBridge.eval("window.__reponseAAppliquer ?? null")
-	if reponse is String and not reponse.is_empty():
-		JavaScriptBridge.eval("window.__reponseAAppliquer=null")
-		_champ_code.text = reponse
-		NetworkManager.appliquer_reponse(reponse)
+
+	var destination: Vector2 = _gestionnaire_actes.obtenir_destination_actuelle()
+	var dist_dest: float = joueur_local.global_position.distance_to(destination)
+	_label_boussole.text = "Objectif : %d m" % int(dist_dest)
+	_fleche_boussole.rotation = (destination - joueur_local.global_position).angle()
+
+	if _porteur and _guide:
+		var dist_allie: float = _porteur.global_position.distance_to(_guide.global_position)
+		_label_allie.text = "👥 Allié : %d m" % int(dist_allie)
+
+	# Détection de transition vers l'acte suivant
+	if dist_dest < 75.0:
+		if _gestionnaire_actes.acte_actuel < 5:
+			if NetworkManager.est_hote or NetworkManager.mode_solo:
+				_gestionnaire_actes.passer_acte_suivant()
+		elif not _fin_declenchee:
+			_fin_declenchee = true
+			_sur_dialogue_termine()
+
+	# Événements et choix contextuels au fil des actes
+	var acte := _gestionnaire_actes.acte_actuel
+	if acte == 1 and not _choix_intermediaire_fait and joueur_local.global_position.x > 420.0:
+		_choix_intermediaire_fait = true
+		_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte1.json", "choix_route_foret")
+	elif acte == 2 and not _evenement_secondaire_fait and joueur_local.global_position.y < 380.0:
+		_evenement_secondaire_fait = true
+		_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte2.json", "attaque_mont_venteux")
+	elif acte == 3 and not _evenement_secondaire_fait and joueur_local.global_position.x > 720.0:
+		_evenement_secondaire_fait = true
+		_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte3.json", "pont_khazad_dum")
+	elif acte == 4 and not _evenement_secondaire_fait and joueur_local.global_position.y < 460.0:
+		_evenement_secondaire_fait = true
+		_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte4.json", "boss_arachne")

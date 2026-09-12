@@ -1,0 +1,78 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/lumiere_pixel.gd" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/pixel_font.ttf" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/Spectre.tscn" id="3"]
+
+[node name="Acte5_MontagneDestin" type="Node2D"]
+
+[node name="Ambiance" type="CanvasModulate" parent="."]
+color = Color(0.55, 0.25, 0.18, 1)
+
+[node name="SolObsidienne" type="ColorRect" parent="."]
+offset_right = 1000.0
+offset_bottom = 1100.0
+color = Color(0.12, 0.08, 0.08, 1)
+
+[node name="FissureLave1" type="Line2D" parent="."]
+points = PackedVector2Array(150, 700, 320, 620, 480, 720, 700, 600)
+width = 20.0
+default_color = Color(1, 0.4, 0.05, 0.85)
+
+[node name="FissureLave2" type="Line2D" parent="."]
+points = PackedVector2Array(400, 480, 520, 530, 650, 460, 850, 500)
+width = 16.0
+default_color = Color(1, 0.35, 0.05, 0.85)
+
+[node name="SentierCendres" type="Line2D" parent="."]
+points = PackedVector2Array(250, 850, 380, 740, 550, 580, 450, 420, 600, 250)
+width = 46.0
+default_color = Color(0.24, 0.18, 0.16, 0.9)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="CratereCrevasse" type="Node2D" parent="."]
+position = Vector2(600, 250)
+
+[node name="BordMagma" type="Polygon2D" parent="CratereCrevasse"]
+color = Color(0.25, 0.1, 0.08, 1)
+polygon = PackedVector2Array(0, -110, 78, -78, 110, 0, 78, 78, 0, 110, -78, 78, -110, 0, -78, -78)
+
+[node name="LaveBouillonnante" type="Polygon2D" parent="CratereCrevasse"]
+color = Color(1, 0.3, 0.05, 0.85)
+polygon = PackedVector2Array(0, -85, 60, -60, 85, 0, 60, 60, 0, 85, -60, 60, -85, 0, -60, -60)
+
+[node name="LumiereMagma" type="PointLight2D" parent="CratereCrevasse"]
+script = ExtResource("1")
+couleur = Color(1, 0.5, 0.15, 1)
+rayon = 240
+intensite = 1.45
+paliers = 4
+vacillement = 0.22
+vitesse_vacillement = 3.5
+
+[node name="LabelCratere" type="Label" parent="CratereCrevasse"]
+offset_left = -110.0
+offset_top = -140.0
+offset_right = 110.0
+offset_bottom = -120.0
+theme_override_colors/font_color = Color(1, 0.8, 0.3, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 11
+text = "🌋 CREVASSE DU DESTIN"
+horizontal_alignment = 1
+
+[node name="SentinelleMordor" parent="." instance=ExtResource("3")]
+position = Vector2(460, 500)
+point_a = Vector2(380, 500)
+point_b = Vector2(580, 500)
+vitesse_patrouille = 50.0
+
+[node name="ZoneDestin" type="Area2D" parent="."]
+position = Vector2(600, 250)
+
+[node name="Collision" type="CollisionPolygon2D" parent="ZoneDestin"]
+polygon = PackedVector2Array(-80, -80, 80, -80, 80, 80, -80, 80)

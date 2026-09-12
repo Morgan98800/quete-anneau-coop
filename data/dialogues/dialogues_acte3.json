@@ -1,0 +1,35 @@
+{
+  "portes_durin": {
+    "repliques": [
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "Les portes de la Moria sont closes... Les runes d'argent scintillent sous la lune."
+      },
+      {
+        "locuteur": "Sam",
+        "portrait": "sam",
+        "texte": "« Ennyn Durin Aran Moria... Pedo mellon a minno ». Qu'est-ce que ça veut dire, m'sieur Frodon ?"
+      },
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "C'est une énigme elfique ! « Parlez, ami, et entrez ». Le mot de passe, c'est 'Mellon' !"
+      }
+    ]
+  },
+  "pont_khazad_dum": {
+    "repliques": [
+      {
+        "locuteur": "Sam",
+        "portrait": "sam",
+        "texte": "Les tambours dans les profondeurs... Doom, doom ! Quelque chose de gigantesque approche !"
+      },
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "Une ombre et une flamme... Le Balrog de Morgoth ! Courons vers la sortie sans nous retourner !"
+      }
+    ]
+  }
+}

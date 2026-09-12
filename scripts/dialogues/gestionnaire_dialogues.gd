@@ -28,7 +28,10 @@ var _portraits := {
 	"frodon": preload("res://assets/sprites/personnages/frodon.png"),
 	"sam": preload("res://assets/sprites/personnages/sam.png"),
 	"gandalf": preload("res://assets/sprites/personnages/gandalf.png"),
-	"nazgul": preload("res://assets/sprites/personnages/nazgul.png")
+	"nazgul": preload("res://assets/sprites/personnages/nazgul.png"),
+	"aragorn": preload("res://assets/sprites/personnages/aragorn.png"),
+	"gollum": preload("res://assets/sprites/personnages/gollum.png"),
+	"arachne": preload("res://assets/sprites/personnages/arachne.png")
 }
 
 func _ready() -> void:
@@ -87,6 +90,9 @@ func _afficher_replique_courante() -> void:
 		"frodon": pitch = 1.05
 		"sam": pitch = 0.88
 		"nazgul": pitch = 0.45
+		"aragorn": pitch = 0.80
+		"gollum": pitch = 1.35
+		"arachne": pitch = 0.35
 
 	# Effet machine à écrire rétro (Typewriter)
 	_label_texte.visible_characters = 0

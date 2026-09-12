@@ -1,0 +1,52 @@
+{
+  "rencontre_gollum": {
+    "repliques": [
+      {
+        "locuteur": "Gollum",
+        "portrait": "gollum",
+        "texte": "Gollum ! Gollum ! Méchants petits hobbits voleurs... Mon Précieux ! Rendez-nous notre Précieux !"
+      },
+      {
+        "locuteur": "Sam",
+        "portrait": "sam",
+        "texte": "Je le tiens, m'sieur Frodon ! Donnez-moi un bout de corde elfique que je lui lie les pattes !"
+      }
+    ]
+  },
+  "choix_gollum": {
+    "titre_choix": "Le sort de Gollum : que décider ?",
+    "options": [
+      {
+        "id": "epargne",
+        "label": "🕊️ Épargner Gollum par pitié",
+        "desc": "La pitié de Bilbon vous guide. Réduit la corruption de 15%.",
+        "delta_corruption": -15
+      },
+      {
+        "id": "chasse",
+        "label": "⚔️ Chasser la créature avec violence",
+        "desc": "Gollum s'enfuit avec rancune dans les ténèbres.",
+        "delta_corruption": 5
+      }
+    ]
+  },
+  "boss_arachne": {
+    "repliques": [
+      {
+        "locuteur": "Arachne",
+        "portrait": "arachne",
+        "texte": "*Hiiiiisssss... Clic-clic-clic...*"
+      },
+      {
+        "locuteur": "Frodon",
+        "portrait": "frodon",
+        "texte": "Sam ! Je suis pris au piège dans ses toiles de venin ! Elle descend du plafond !"
+      },
+      {
+        "locuteur": "Sam",
+        "portrait": "sam",
+        "texte": "Tenez bon m'sieur Frodon ! La Fiole de Dame Galadriel ! Aiya Eärendil Elenion Ancalima !"
+      }
+    ]
+  }
+}
