@@ -191,7 +191,7 @@ func _sur_connexion_etablie() -> void:
 		var camera: Camera2D = get_node("Camera2D")
 		camera.reparent(joueur_local)
 		camera.position = Vector2.ZERO
-		camera.zoom = Vector2(2.2, 2.2)
+		camera.zoom = Vector2(1.55, 1.55)
 		camera.make_current()
 
 	# Démarrer la campagne à l'Acte 1
