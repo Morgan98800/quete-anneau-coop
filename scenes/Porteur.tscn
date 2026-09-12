@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/porteur.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/personnages/frodon.png" id="2"]
+[ext_resource type="Script" path="res://scripts/lumiere_pixel.gd" id="3"]
 
 [sub_resource type="CircleShape2D" id="circle"]
 radius = 16.0
@@ -14,7 +15,7 @@ shape = SubResource("circle")
 
 [node name="Ombre" type="Polygon2D" parent="."]
 position = Vector2(0, 14)
-color = Color(0, 0, 0, 0.35)
+color = Color(0, 0, 0, 0.4)
 polygon = PackedVector2Array(-14, 0, -9, 4, 9, 4, 14, 0, 9, -4, -9, -4)
 
 [node name="AuraSpectrale" type="Polygon2D" parent="."]
@@ -35,6 +36,15 @@ position = Vector2(1, 1)
 [node name="HaloAnneau" type="Polygon2D" parent="Visuel/Anneau"]
 color = Color(1, 0.85, 0.2, 0.45)
 polygon = PackedVector2Array(0, -8, 6, -4, 8, 0, 6, 4, 0, 8, -6, 4, -8, 0, -6, -4)
+
+[node name="LumiereAnneau" type="PointLight2D" parent="Visuel/Anneau"]
+script = ExtResource("3")
+couleur = Color(1, 0.9, 0.63, 1)
+rayon = 110
+intensite = 1.2
+paliers = 4
+vacillement = 0.18
+vitesse_vacillement = 5.0
 
 [node name="EtiquetteNom" type="Label" parent="."]
 offset_left = -60.0

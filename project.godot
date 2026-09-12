@@ -22,6 +22,8 @@ config/features=PackedStringArray("4.7", "GL Compatibility")
 
 NetworkManager="*res://scripts/network_manager.gd"
 Corruption="*res://scripts/corruption.gd"
+Palette="*res://scripts/palette.gd"
+
 
 [display]
 
