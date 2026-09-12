@@ -1,0 +1,12 @@
+{
+  "name": "quete-anneau-coop",
+  "version": "1.0.0",
+  "description": "Serveur Web & Relais pour Quete Anneau Coop",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
