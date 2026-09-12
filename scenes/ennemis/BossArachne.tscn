@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/ennemis/boss_arachne.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personnages/arachne_sprite.png" id="2"]
+[ext_resource type="Script" path="res://scripts/combat/hurtbox.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/combat/hitbox.gd" id="4"]
+
+[sub_resource type="CircleShape2D" id="circle_body"]
+radius = 28.0
+
+[sub_resource type="CircleShape2D" id="circle_hurt"]
+radius = 32.0
+
+[sub_resource type="CircleShape2D" id="circle_hit"]
+radius = 34.0
+
+[node name="BossArachne" type="CharacterBody2D" groups=["ennemis", "boss"]]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1")
+points_de_vie = 10
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("circle_body")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(2.2, 2.2)
+texture = ExtResource("2")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+script = ExtResource("3")
+camp = "ennemi"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("circle_hurt")
+
+[node name="Hitbox" type="Area2D" parent="."]
+script = ExtResource("4")
+camp = "ennemi"
+degats = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("circle_hit")

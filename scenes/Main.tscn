@@ -214,6 +214,22 @@ theme_override_font_sizes/font_size = 14
 text = "👥 Allié : 12m"
 horizontal_alignment = 1
 
+[node name="LabelCoeurs" type="Label" parent="CanvasLayer/UIJeu"]
+offset_left = 24.0
+offset_top = 80.0
+offset_right = 260.0
+offset_bottom = 110.0
+theme_override_font_sizes/font_size = 20
+text = "❤️❤️❤️"
+
+[node name="LabelInventaire" type="Button" parent="CanvasLayer/UIJeu"]
+offset_left = 24.0
+offset_top = 114.0
+offset_right = 210.0
+offset_bottom = 152.0
+theme_override_font_sizes/font_size = 12
+text = "🍞 Lembas (1) | 🔑 0"
+
 [node name="BoutonPleinEcranJeu" type="Button" parent="CanvasLayer/UIJeu"]
 anchor_left = 1.0
 anchor_right = 1.0
@@ -224,16 +240,41 @@ offset_bottom = 72.0
 theme_override_font_sizes/font_size = 22
 text = "⛶"
 
+[node name="BoutonAttaque" type="Button" parent="CanvasLayer/UIJeu"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_top = -280.0
+offset_right = -30.0
+offset_bottom = -160.0
+theme_override_font_sizes/font_size = 18
+text = "⚔️ ATTAQUE"
+
 [node name="BoutonAction" type="Button" parent="CanvasLayer/UIJeu"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -210.0
+offset_left = -310.0
 offset_top = -240.0
+offset_right = -190.0
+offset_bottom = -150.0
+theme_override_font_sizes/font_size = 14
+text = "💍 ACTION"
+
+[node name="BoutonChangerHeros" type="Button" parent="CanvasLayer/UIJeu"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_top = -140.0
 offset_right = -30.0
-offset_bottom = -130.0
-theme_override_font_sizes/font_size = 20
+offset_bottom = -80.0
+theme_override_font_sizes/font_size = 13
+text = "🔄 HÉROS"
 
 [node name="Joystick" type="Control" parent="CanvasLayer/UIJeu"]
 anchor_top = 1.0

@@ -58,6 +58,12 @@ func _initialiser_sons() -> void:
 	_sons["alerte"] = _synthetiser_alerte(0.28)
 	_sons["victoire"] = _synthetiser_arpege([523.25, 659.25, 783.99, 1046.5, 1318.5], 0.7)
 	_sons["defaite"] = _synthetiser_arpege([440.0, 415.3, 392.0, 329.6], 0.7)
+	_sons["epee"] = _synthetiser_glissando(600.0, 150.0, 0.12)
+	_sons["impact"] = _synthetiser_glissando(220.0, 80.0, 0.09)
+	_sons["porte"] = _synthetiser_arpege([261.6, 329.6, 392.0, 523.25], 0.45)
+	_sons["coffre"] = _synthetiser_arpege([523.25, 659.25, 783.99, 1046.5], 0.4)
+	_sons["degat"] = _synthetiser_glissando(180.0, 70.0, 0.14)
+	_sons["magie"] = _synthetiser_arpege([392.0, 523.25, 659.25, 783.99, 1046.5, 1318.5], 0.5)
 
 # --- Effets Sonores (SFX) ---
 
@@ -88,6 +94,57 @@ func jouer_soin() -> void:
 		return
 	var p := _obtenir_lecteur()
 	p.stream = _sons["soin"]
+	p.pitch_scale = 1.0
+	p.volume_db = -4.0
+	p.play()
+
+func jouer_epee() -> void:
+	if not _sons.has("epee"): return
+	var p := _obtenir_lecteur()
+	p.stream = _sons["epee"]
+	p.pitch_scale = randf_range(0.95, 1.15)
+	p.volume_db = -3.0
+	p.play()
+
+func jouer_impact() -> void:
+	if not _sons.has("impact"): return
+	var p := _obtenir_lecteur()
+	p.stream = _sons["impact"]
+	p.pitch_scale = randf_range(0.9, 1.1)
+	p.volume_db = -2.5
+	p.play()
+
+func jouer_porte() -> void:
+	if not _sons.has("porte"): return
+	var p := _obtenir_lecteur()
+	p.stream = _sons["porte"]
+	p.pitch_scale = 0.85
+	p.volume_db = -3.0
+	p.play()
+
+func jouer_coffre() -> void:
+	if not _sons.has("coffre"): return
+	var p := _obtenir_lecteur()
+	p.stream = _sons["coffre"]
+	p.pitch_scale = 1.05
+	p.volume_db = -2.0
+	p.play()
+
+func jouer_degat() -> void:
+	if not _sons.has("degat"): return
+	var p := _obtenir_lecteur()
+	p.stream = _sons["degat"]
+	p.pitch_scale = randf_range(0.9, 1.1)
+	p.volume_db = -1.5
+	p.play()
+
+func jouer_magie() -> void:
+	if not _sons.has("magie"): return
+	var p := _obtenir_lecteur()
+	p.stream = _sons["magie"]
+	p.pitch_scale = 1.0
+	p.volume_db = -2.0
+	p.play()
 	p.pitch_scale = 1.0
 	p.volume_db = -4.0
 	p.play()

@@ -21,41 +21,41 @@ const INFOS_ACTES := {
 		"numero": "ACTE I",
 		"titre": "L'OMBRE SUR LA COMTE",
 		"scene_path": "res://scenes/actes/Acte1_Comte.tscn",
-		"spawn_porteur": Vector2(180, 240),
-		"spawn_guide": Vector2(140, 260),
-		"destination": Vector2(1100, 800)
+		"spawn_porteur": Vector2(220, 260),
+		"spawn_guide": Vector2(170, 280),
+		"destination": Vector2(1950, 780)
 	},
 	2: {
 		"numero": "ACTE II",
 		"titre": "LE MONT VENTEUX",
 		"scene_path": "res://scenes/actes/Acte2_MontVenteux.tscn",
-		"spawn_porteur": Vector2(160, 650),
-		"spawn_guide": Vector2(120, 670),
-		"destination": Vector2(650, 200)
+		"spawn_porteur": Vector2(220, 1350),
+		"spawn_guide": Vector2(170, 1370),
+		"destination": Vector2(1950, 320)
 	},
 	3: {
 		"numero": "ACTE III",
 		"titre": "LES MINES DE LA MORIA",
 		"scene_path": "res://scenes/actes/Acte3_Moria.tscn",
-		"spawn_porteur": Vector2(140, 420),
-		"spawn_guide": Vector2(100, 440),
-		"destination": Vector2(1050, 420)
+		"spawn_porteur": Vector2(200, 750),
+		"spawn_guide": Vector2(150, 770),
+		"destination": Vector2(2150, 750)
 	},
 	4: {
 		"numero": "ACTE IV",
 		"titre": "L'ANTRE D'ARACHNE",
 		"scene_path": "res://scenes/actes/Acte4_CirithUngol.tscn",
-		"spawn_porteur": Vector2(180, 750),
-		"spawn_guide": Vector2(140, 770),
-		"destination": Vector2(650, 180)
+		"spawn_porteur": Vector2(220, 1350),
+		"spawn_guide": Vector2(170, 1370),
+		"destination": Vector2(1950, 350)
 	},
 	5: {
 		"numero": "ACTE V",
 		"titre": "LA MONTAGNE DU DESTIN",
 		"scene_path": "res://scenes/actes/Acte5_MontagneDestin.tscn",
-		"spawn_porteur": Vector2(250, 850),
-		"spawn_guide": Vector2(210, 870),
-		"destination": Vector2(600, 250)
+		"spawn_porteur": Vector2(220, 1350),
+		"spawn_guide": Vector2(170, 1370),
+		"destination": Vector2(1800, 380)
 	}
 }
 

@@ -21,6 +21,10 @@ extends Node2D
 @onready var _barre_corruption: ProgressBar = $CanvasLayer/UIJeu/BarreCorruption
 @onready var _label_corruption: Label = $CanvasLayer/UIJeu/LabelCorruption
 @onready var _bouton_action: Button = $CanvasLayer/UIJeu/BoutonAction
+@onready var _bouton_attaque: Button = $CanvasLayer/UIJeu/BoutonAttaque
+@onready var _bouton_changer_heros: Button = $CanvasLayer/UIJeu/BoutonChangerHeros
+@onready var _label_coeurs: Label = $CanvasLayer/UIJeu/LabelCoeurs
+@onready var _label_inventaire: Button = $CanvasLayer/UIJeu/LabelInventaire
 
 @onready var _fleche_boussole: Polygon2D = $CanvasLayer/UIJeu/Boussole/FlecheBoussole
 @onready var _label_boussole: Label = $CanvasLayer/UIJeu/Boussole/LabelBoussole
@@ -42,6 +46,7 @@ extends Node2D
 var _porteur: CharacterBody2D
 var _guide: CharacterBody2D
 var _partie_terminee := false
+var _heros_controle_solo: String = "porteur" # "porteur" ou "guide"
 
 var _dernier_dialogue_cle: String = ""
 var _choix_intermediaire_fait := false
@@ -77,6 +82,14 @@ func _ready() -> void:
 
 	_porteur = get_node_or_null("Porteur")
 	_guide = get_node_or_null("Guide")
+
+	_bouton_attaque.pressed.connect(_sur_bouton_attaque)
+	_bouton_changer_heros.pressed.connect(_sur_changer_heros)
+	_label_inventaire.pressed.connect(func(): GestionnaireVie.consommer_lembas())
+
+	GestionnaireVie.vie_changee.connect(_sur_vie_changee)
+	GestionnaireVie.mort.connect(_sur_mort_joueur)
+	GestionnaireVie.inventaire_change.connect(_sur_inventaire_change)
 
 	_gestionnaire_actes.initialiser(_monde, _banniere_acte)
 	_gestionnaire_actes.acte_change.connect(_sur_acte_change)
@@ -178,21 +191,12 @@ func _basculer_plein_ecran() -> void:
 func _sur_connexion_etablie() -> void:
 	_ui_connexion.hide()
 	_ui_jeu.show()
-	if NetworkManager.joue_porteur:
-		_bouton_action.text = "Invisibilité"
-	else:
-		_bouton_action.text = "Soigner"
 	_label_statut.text = "Connectés !"
 	if OS.has_feature("web"):
 		JavaScriptBridge.eval("window.__connecte=true")
 
-	var joueur_local: Node2D = _porteur if NetworkManager.joue_porteur else _guide
-	if joueur_local:
-		var camera: Camera2D = get_node("Camera2D")
-		camera.reparent(joueur_local)
-		camera.position = Vector2.ZERO
-		camera.zoom = Vector2(1.55, 1.55)
-		camera.make_current()
+	_heros_controle_solo = "porteur"
+	_mettre_a_jour_heros_actif()
 
 	# Démarrer la campagne à l'Acte 1
 	_gestionnaire_actes.demarrer_campagne()
@@ -205,6 +209,11 @@ func _sur_acte_change(numero: int) -> void:
 
 	# Lancer la musique chiptune d'ambiance de l'acte
 	SonChiptune.jouer_musique_acte(numero)
+
+	# Configurer l'identité du compagnon (Sam, Aragorn, Gandalf)
+	if _guide and _guide.has_method("configurer_heros_pour_acte"):
+		_guide.configurer_heros_pour_acte(numero)
+	_mettre_a_jour_heros_actif()
 
 	# Lancement du dialogue d'ouverture de l'acte
 	match numero:
@@ -322,25 +331,127 @@ func _recommencer_partie() -> void:
 	_ecran_victoire.hide()
 	_ecran_defaite.hide()
 	Corruption.reinitialiser()
+	GestionnaireVie.reinitialiser()
 	if _porteur:
 		_porteur.invisible = false
 		_porteur._appliquer_apparence()
 	_gestionnaire_actes.demarrer_campagne()
 	_sur_acte_change(1)
 
+func _unhandled_input(event: InputEvent) -> void:
+	if not event is InputEventKey or not event.is_pressed() or event.is_echo():
+		return
+	if event.keycode == KEY_SPACE or event.keycode == KEY_J:
+		_sur_bouton_attaque()
+	elif event.keycode == KEY_E or event.keycode == KEY_K:
+		_sur_bouton_action()
+	elif event.keycode == KEY_TAB or event.keycode == KEY_C or event.keycode == KEY_H:
+		if NetworkManager.mode_solo:
+			_sur_changer_heros()
+
+func _sur_bouton_attaque() -> void:
+	if not NetworkManager.connecte or _partie_terminee:
+		return
+	if NetworkManager.mode_solo:
+		if _heros_controle_solo == "porteur":
+			if _porteur: _porteur.attaquer()
+		else:
+			if _guide: _guide.attaquer()
+	else:
+		if NetworkManager.joue_porteur:
+			if _porteur: _porteur.attaquer()
+		else:
+			if _guide: _guide.attaquer()
+
+func _sur_changer_heros() -> void:
+	SonChiptune.jouer_clic()
+	if _heros_controle_solo == "porteur":
+		_heros_controle_solo = "guide"
+	else:
+		_heros_controle_solo = "porteur"
+	_mettre_a_jour_heros_actif()
+
+func _mettre_a_jour_heros_actif() -> void:
+	if not _porteur or not _guide:
+		return
+	var camera: Camera2D = get_node("Camera2D")
+	if NetworkManager.mode_solo:
+		_porteur.controle_actif = (_heros_controle_solo == "porteur")
+		_guide.controle_actif = (_heros_controle_solo == "guide")
+		var actif: Node2D = _porteur if _heros_controle_solo == "porteur" else _guide
+		camera.reparent(actif)
+		camera.position = Vector2.ZERO
+		camera.zoom = Vector2(1.55, 1.55)
+		camera.make_current()
+
+		_bouton_changer_heros.show()
+		if _heros_controle_solo == "porteur":
+			_bouton_action.text = "💍 INVISIBLE"
+			_bouton_changer_heros.text = "🔄 %s" % _guide.role_actuel.to_upper()
+		else:
+			_bouton_changer_heros.text = "🔄 FRODON"
+			match _guide.role_actuel:
+				"aragorn": _bouton_action.text = "🔥 TORCHE"
+				"gandalf": _bouton_action.text = "⚡ ONDE"
+				_: _bouton_action.text = "✨ FIOLE"
+	else:
+		_bouton_changer_heros.hide()
+		var joueur_local: Node2D = _porteur if NetworkManager.joue_porteur else _guide
+		camera.reparent(joueur_local)
+		camera.position = Vector2.ZERO
+		camera.zoom = Vector2(1.55, 1.55)
+		camera.make_current()
+		if NetworkManager.joue_porteur:
+			_bouton_action.text = "💍 INVISIBLE"
+		else:
+			match _guide.role_actuel:
+				"aragorn": _bouton_action.text = "🔥 TORCHE"
+				"gandalf": _bouton_action.text = "⚡ ONDE"
+				_: _bouton_action.text = "✨ SOIN"
+
 func _sur_bouton_action() -> void:
 	if not NetworkManager.connecte or _partie_terminee:
 		return
-	if NetworkManager.joue_porteur:
-		if _porteur: _porteur.basculer_invisibilite()
+	if NetworkManager.mode_solo:
+		if _heros_controle_solo == "porteur":
+			if _porteur: _porteur.basculer_invisibilite()
+		else:
+			if _guide: _guide.interagir()
 	else:
-		if _guide: _guide.interagir()
+		if NetworkManager.joue_porteur:
+			if _porteur: _porteur.basculer_invisibilite()
+		else:
+			if _guide: _guide.interagir()
+
+func _sur_vie_changee(actuelle: int, max_vie: int) -> void:
+	var texte_coeurs := ""
+	var nb_coeurs_pleins := actuelle / 2
+	var demi_coeur := (actuelle % 2) == 1
+	var nb_coeurs_vides := (max_vie - actuelle) / 2
+	for i in range(nb_coeurs_pleins):
+		texte_coeurs += "❤️"
+	if demi_coeur:
+		texte_coeurs += "💔"
+	for i in range(nb_coeurs_vides):
+		texte_coeurs += "🖤"
+	_label_coeurs.text = texte_coeurs
+
+func _sur_inventaire_change(cles: int, lembas: int) -> void:
+	_label_inventaire.text = "🍞 Lembas (%d) | 🔑 %d" % [lembas, cles]
+
+func _sur_mort_joueur() -> void:
+	if not _partie_terminee and NetworkManager.connecte:
+		_partie_terminee = true
+		if NetworkManager.mode_solo:
+			_declencher_defaite()
+		else:
+			_declencher_defaite.rpc()
 
 func _process(_delta: float) -> void:
 	if not NetworkManager.connecte or _partie_terminee:
 		return
 
-	var joueur_local: Node2D = _porteur if NetworkManager.joue_porteur else _guide
+	var joueur_local: Node2D = (_porteur if _heros_controle_solo == "porteur" else _guide) if NetworkManager.mode_solo else (_porteur if NetworkManager.joue_porteur else _guide)
 	if not joueur_local:
 		return
 
@@ -364,15 +475,15 @@ func _process(_delta: float) -> void:
 
 	# Événements et choix contextuels au fil des actes
 	var acte := _gestionnaire_actes.acte_actuel
-	if acte == 1 and not _choix_intermediaire_fait and joueur_local.global_position.x > 420.0:
+	if acte == 1 and not _choix_intermediaire_fait and joueur_local.global_position.x > 700.0:
 		_choix_intermediaire_fait = true
 		_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte1.json", "choix_route_foret")
-	elif acte == 2 and not _evenement_secondaire_fait and joueur_local.global_position.y < 380.0:
+	elif acte == 2 and not _evenement_secondaire_fait and joueur_local.global_position.y < 500.0:
 		_evenement_secondaire_fait = true
 		_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte2.json", "attaque_mont_venteux")
-	elif acte == 3 and not _evenement_secondaire_fait and joueur_local.global_position.x > 720.0:
+	elif acte == 3 and not _evenement_secondaire_fait and joueur_local.global_position.x > 800.0:
 		_evenement_secondaire_fait = true
 		_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte3.json", "pont_khazad_dum")
-	elif acte == 4 and not _evenement_secondaire_fait and joueur_local.global_position.y < 460.0:
+	elif acte == 4 and not _evenement_secondaire_fait and joueur_local.global_position.y < 500.0:
 		_evenement_secondaire_fait = true
 		_lancer_dialogue_fichier("res://data/dialogues/dialogues_acte4.json", "boss_arachne")
