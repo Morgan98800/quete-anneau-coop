@@ -203,6 +203,9 @@ func _sur_acte_change(numero: int) -> void:
 	_evenement_secondaire_fait = false
 	_fin_declenchee = false
 
+	# Lancer la musique chiptune d'ambiance de l'acte
+	SonChiptune.jouer_musique_acte(numero)
+
 	# Lancement du dialogue d'ouverture de l'acte
 	match numero:
 		1:
