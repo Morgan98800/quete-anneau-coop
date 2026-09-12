@@ -61,14 +61,9 @@ func _initialiser_sons() -> void:
 
 # --- Effets Sonores (SFX) ---
 
-func jouer_bip_dialogue(pitch: float = 1.0) -> void:
-	if not _sons.has("bip"):
-		return
-	var p := _obtenir_lecteur()
-	p.stream = _sons["bip"]
-	p.pitch_scale = clampf(pitch, 0.5, 2.0)
-	p.volume_db = -8.0
-	p.play()
+func jouer_bip_dialogue(_pitch: float = 1.0) -> void:
+	# Désactivé à la demande du joueur (silencieux pour les dialogues)
+	pass
 
 func jouer_clic() -> void:
 	if not _sons.has("clic"):

@@ -94,21 +94,12 @@ func _afficher_replique_courante() -> void:
 		"gollum": pitch = 1.35
 		"arachne": pitch = 0.35
 
-	# Effet machine à écrire rétro (Typewriter)
+	# Effet machine à écrire rétro (Typewriter) sans son
 	_label_texte.visible_characters = 0
 	_frappe_active = true
 	var duree: float = texte.length() * 0.028
 	_frappe_tween = create_tween()
 	_frappe_tween.tween_property(_label_texte, "visible_characters", texte.length(), duree)
-	
-	# Sons de bips réguliers pendant le défilement
-	var nb_bips: int = max(1, texte.length() / 2)
-	for i in range(nb_bips):
-		_frappe_tween.parallel().tween_callback(func():
-			if _frappe_active:
-				SonChiptune.jouer_bip_dialogue(pitch)
-		).set_delay(i * 0.055)
-	
 	_frappe_tween.finished.connect(func(): _frappe_active = false)
 
 func avancer_dialogue() -> void:
