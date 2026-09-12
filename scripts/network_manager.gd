@@ -238,24 +238,30 @@ func _emettre_code() -> void:
 # Signalisation en ligne automatique (REST API)
 # ------------------------------------------------------------
 
+func _get_signal_url() -> String:
+	if OS.has_feature("web"):
+		var origin: Variant = JavaScriptBridge.eval("window.location.origin")
+		if origin is String and not origin.is_empty():
+			return origin + "/api/signal"
+	return "https://quete-anneau-coop.onrender.com/api/signal"
+
 func _envoyer_signal(corps_data: Dictionary) -> void:
-	var paquet := {
-		"name": "quete_anneau_coop",
-		"data": corps_data
-	}
-	var json_str := JSON.stringify(paquet)
+	var json_str := JSON.stringify(corps_data)
 	if OS.has_feature("web"):
 		var js := """
 		(function() {
 			try {
-				fetch('%s', {
-					method: 'PUT',
+				var url = window.location.origin.includes('localhost') || window.location.origin.includes('onrender.com') 
+					? (window.location.origin + '/api/signal')
+					: 'https://quete-anneau-coop.onrender.com/api/signal';
+				fetch(url, {
+					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: %s
-				}).catch(function(e) { console.error('Erreur PUT signal:', e); });
+				}).catch(function(e) { console.error('Erreur POST signal:', e); });
 			} catch(e) { console.error(e); }
 		})();
-		""" % [URL_SIGNAL, JSON.stringify(json_str)]
+		""" % [JSON.stringify(json_str)]
 		JavaScriptBridge.eval(js)
 
 
@@ -265,7 +271,10 @@ func _verifier_signal() -> void:
 		(function() {
 			if (window.__signalFetchEnCours) return;
 			window.__signalFetchEnCours = true;
-			fetch('%s')
+			var url = window.location.origin.includes('localhost') || window.location.origin.includes('onrender.com') 
+				? (window.location.origin + '/api/signal')
+				: 'https://quete-anneau-coop.onrender.com/api/signal';
+			fetch(url)
 				.then(function(r) { return r.json(); })
 				.then(function(d) {
 					window.__signalFetchEnCours = false;
@@ -277,8 +286,9 @@ func _verifier_signal() -> void:
 					window.__signalFetchEnCours = false;
 				});
 		})();
-		""" % URL_SIGNAL
+		"""
 		JavaScriptBridge.eval(js)
+
 
 
 func _lire_reponse_signal() -> void:
