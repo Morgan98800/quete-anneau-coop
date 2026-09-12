@@ -1,0 +1,460 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/joystick.gd" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/Porteur.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/Guide.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/Spectre.tscn" id="5"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Monde" type="Node2D" parent="."]
+
+[node name="FondForet" type="ColorRect" parent="Monde"]
+offset_right = 3200.0
+offset_bottom = 3200.0
+color = Color(0.12, 0.22, 0.14, 1)
+
+[node name="ZoneMarais" type="Polygon2D" parent="Monde"]
+color = Color(0.18, 0.2, 0.16, 1)
+polygon = PackedVector2Array(900, 3200, 3200, 900, 3200, 2300, 2300, 3200)
+
+[node name="ZoneVolcan" type="Polygon2D" parent="Monde"]
+color = Color(0.15, 0.1, 0.1, 1)
+polygon = PackedVector2Array(2000, 3200, 3200, 2000, 3200, 3200)
+
+[node name="Sentier" type="Line2D" parent="Monde"]
+points = PackedVector2Array(460, 440, 750, 700, 1100, 1050, 1500, 1400, 1850, 1750, 2200, 2100, 2550, 2450, 2800, 2750, 2980, 2980)
+width = 54.0
+default_color = Color(0.36, 0.3, 0.2, 0.75)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="SentierBord" type="Line2D" parent="Monde"]
+points = PackedVector2Array(460, 440, 750, 700, 1100, 1050, 1500, 1400, 1850, 1750, 2200, 2100, 2550, 2450, 2800, 2750, 2980, 2980)
+width = 62.0
+default_color = Color(0.24, 0.2, 0.14, 0.45)
+joint_mode = 2
+
+[node name="CampDepart" type="Node2D" parent="Monde"]
+position = Vector2(440, 440)
+
+[node name="SolTente" type="Polygon2D" parent="Monde/CampDepart"]
+color = Color(0.35, 0.28, 0.18, 0.8)
+polygon = PackedVector2Array(-90, -50, 90, -50, 100, 70, -100, 70)
+
+[node name="FeuDeCamp" type="Polygon2D" parent="Monde/CampDepart"]
+position = Vector2(0, 10)
+color = Color(1, 0.6, 0.1, 0.8)
+polygon = PackedVector2Array(0, -18, 14, -6, 10, 14, -10, 14, -14, -6)
+
+[node name="HaloFeu" type="Polygon2D" parent="Monde/CampDepart"]
+position = Vector2(0, 10)
+color = Color(1, 0.7, 0.2, 0.25)
+polygon = PackedVector2Array(0, -45, 32, -32, 45, 0, 32, 32, 0, 45, -32, 32, -45, 0, -32, -32)
+
+[node name="LabelCamp" type="Label" parent="Monde/CampDepart"]
+offset_left = -90.0
+offset_top = -85.0
+offset_right = 90.0
+offset_bottom = -60.0
+theme_override_colors/font_color = Color(0.85, 0.95, 0.75, 1)
+text = "🏡 Havre de Paix (Départ)"
+horizontal_alignment = 1
+
+[node name="DecorsForet" type="Node2D" parent="Monde"]
+
+[node name="Arbre1" type="Polygon2D" parent="Monde/DecorsForet"]
+position = Vector2(300, 260)
+color = Color(0.08, 0.28, 0.12, 1)
+polygon = PackedVector2Array(0, -50, 38, -10, 24, -10, 44, 25, -44, 25, -24, -10, -38, -10)
+
+[node name="Arbre2" type="Polygon2D" parent="Monde/DecorsForet"]
+position = Vector2(620, 280)
+color = Color(0.1, 0.32, 0.15, 1)
+polygon = PackedVector2Array(0, -55, 42, -12, 26, -12, 48, 28, -48, 28, -26, -12, -42, -12)
+
+[node name="Arbre3" type="Polygon2D" parent="Monde/DecorsForet"]
+position = Vector2(250, 600)
+color = Color(0.09, 0.26, 0.12, 1)
+polygon = PackedVector2Array(0, -48, 36, -10, 22, -10, 40, 24, -40, 24, -22, -10, -36, -10)
+
+[node name="Arbre4" type="Polygon2D" parent="Monde/DecorsForet"]
+position = Vector2(850, 480)
+color = Color(0.1, 0.3, 0.14, 1)
+polygon = PackedVector2Array(0, -52, 40, -10, 25, -10, 45, 26, -45, 26, -25, -10, -40, -10)
+
+[node name="Arbre5" type="Polygon2D" parent="Monde/DecorsForet"]
+position = Vector2(680, 880)
+color = Color(0.08, 0.28, 0.12, 1)
+polygon = PackedVector2Array(0, -50, 38, -10, 24, -10, 44, 25, -44, 25, -24, -10, -38, -10)
+
+[node name="DecorsRuines" type="Node2D" parent="Monde"]
+
+[node name="Pilier1" type="Polygon2D" parent="Monde/DecorsRuines"]
+position = Vector2(1380, 1250)
+color = Color(0.42, 0.44, 0.4, 1)
+polygon = PackedVector2Array(-16, -45, 16, -45, 18, 45, -18, 45)
+
+[node name="Pilier2" type="Polygon2D" parent="Monde/DecorsRuines"]
+position = Vector2(1650, 1220)
+color = Color(0.38, 0.4, 0.36, 1)
+polygon = PackedVector2Array(-14, -38, 14, -38, 16, 38, -16, 38)
+
+[node name="ArcheRuine" type="Polygon2D" parent="Monde/DecorsRuines"]
+position = Vector2(1515, 1205)
+color = Color(0.48, 0.5, 0.46, 1)
+polygon = PackedVector2Array(-150, -10, 150, -10, 150, 10, -150, 10)
+
+[node name="Rocher1" type="Polygon2D" parent="Monde/DecorsRuines"]
+position = Vector2(1750, 1900)
+color = Color(0.32, 0.33, 0.3, 1)
+polygon = PackedVector2Array(-35, -15, 0, -35, 45, -10, 35, 30, -25, 28)
+
+[node name="Rocher2" type="Polygon2D" parent="Monde/DecorsRuines"]
+position = Vector2(1300, 1600)
+color = Color(0.3, 0.32, 0.29, 1)
+polygon = PackedVector2Array(-40, -10, -10, -30, 35, -5, 25, 25, -30, 20)
+
+[node name="DecorsVolcan" type="Node2D" parent="Monde"]
+
+[node name="FissureLave1" type="Line2D" parent="Monde/DecorsVolcan"]
+points = PackedVector2Array(2200, 2700, 2350, 2580, 2500, 2650, 2680, 2520)
+width = 18.0
+default_color = Color(1, 0.35, 0.05, 0.8)
+
+[node name="FissureLave2" type="Line2D" parent="Monde/DecorsVolcan"]
+points = PackedVector2Array(2700, 2300, 2820, 2420, 2950, 2380, 3100, 2500)
+width = 16.0
+default_color = Color(1, 0.3, 0.05, 0.85)
+
+[node name="PicRoche1" type="Polygon2D" parent="Monde/DecorsVolcan"]
+position = Vector2(2400, 2200)
+color = Color(0.2, 0.12, 0.12, 1)
+polygon = PackedVector2Array(0, -60, 40, 20, -40, 20)
+
+[node name="PicRoche2" type="Polygon2D" parent="Monde/DecorsVolcan"]
+position = Vector2(2850, 2550)
+color = Color(0.22, 0.13, 0.13, 1)
+polygon = PackedVector2Array(0, -75, 45, 25, -45, 25)
+
+[node name="Destination" type="Node2D" parent="Monde"]
+position = Vector2(3000, 3000)
+
+[node name="LavePulsante" type="Polygon2D" parent="Monde/Destination"]
+color = Color(1, 0.25, 0.05, 0.5)
+polygon = PackedVector2Array(0, -160, 113, -113, 160, 0, 113, 113, 0, 160, -113, 113, -160, 0, -113, -113)
+
+[node name="BordCratere" type="Polygon2D" parent="Monde/Destination"]
+color = Color(0.25, 0.12, 0.1, 1)
+polygon = PackedVector2Array(0, -120, 85, -85, 120, 0, 85, 85, 0, 120, -85, 85, -120, 0, -85, -85)
+
+[node name="CoeurVolcan" type="Polygon2D" parent="Monde/Destination"]
+color = Color(1, 0.45, 0.1, 1)
+polygon = PackedVector2Array(0, -80, 56, -56, 80, 0, 56, 56, 0, 80, -56, 56, -80, 0, -56, -56)
+
+[node name="AutelAnneau" type="Polygon2D" parent="Monde/Destination"]
+color = Color(1, 0.9, 0.3, 1)
+polygon = PackedVector2Array(0, -18, 14, -8, 18, 0, 14, 8, 0, 18, -14, 8, -18, 0, -14, -8)
+
+[node name="LabelDestination" type="Label" parent="Monde/Destination"]
+offset_left = -170.0
+offset_top = -200.0
+offset_right = 170.0
+offset_bottom = -170.0
+theme_override_colors/font_color = Color(1, 0.4, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 18
+text = "🌋 Montagne du Destin"
+horizontal_alignment = 1
+
+[node name="Spectres" type="Node2D" parent="."]
+
+[node name="Spectre1" parent="Spectres" instance=ExtResource("5")]
+position = Vector2(1100, 1150)
+point_a = Vector2(950, 1250)
+point_b = Vector2(1250, 1050)
+
+[node name="Spectre2" parent="Spectres" instance=ExtResource("5")]
+position = Vector2(1700, 1600)
+point_a = Vector2(1550, 1750)
+point_b = Vector2(1850, 1450)
+
+[node name="Spectre3" parent="Spectres" instance=ExtResource("5")]
+position = Vector2(2350, 2200)
+point_a = Vector2(2200, 2350)
+point_b = Vector2(2500, 2050)
+
+[node name="Spectre4" parent="Spectres" instance=ExtResource("5")]
+position = Vector2(2750, 2650)
+point_a = Vector2(2600, 2800)
+point_b = Vector2(2900, 2500)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="Porteur" parent="." instance=ExtResource("3")]
+position = Vector2(490, 420)
+
+[node name="Guide" parent="." instance=ExtResource("4")]
+position = Vector2(390, 470)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="UIConnexion" type="Control" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="FondUI" type="ColorRect" parent="CanvasLayer/UIConnexion"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.65)
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UIConnexion"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -210.0
+offset_right = 300.0
+offset_bottom = 210.0
+theme_override_constants/separation = 12
+
+[node name="LabelTitre" type="Label" parent="CanvasLayer/UIConnexion/VBox"]
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+text = "🗡️ Quête de l'Anneau — Coop 🌿"
+
+[node name="LabelStatut" type="Label" parent="CanvasLayer/UIConnexion/VBox"]
+horizontal_alignment = 1
+autowrap_mode = 2
+text = "Cliquez simplement sur votre personnage pour vous connecter !"
+
+[node name="BoutonCreer" type="Button" parent="CanvasLayer/UIConnexion/VBox"]
+custom_minimum_size = Vector2(0, 50)
+theme_override_font_sizes/font_size = 16
+text = "🗡️ Joueur 1 : Porteur (Lancer la partie)"
+
+[node name="BoutonRejoindre" type="Button" parent="CanvasLayer/UIConnexion/VBox"]
+custom_minimum_size = Vector2(0, 50)
+theme_override_font_sizes/font_size = 16
+text = "🌿 Joueur 2 : Guide (Rejoindre la partie)"
+
+[node name="BoutonPleinEcran" type="Button" parent="CanvasLayer/UIConnexion/VBox"]
+custom_minimum_size = Vector2(0, 42)
+text = "⛶ Activer le Plein Écran (Smartphone)"
+
+[node name="BoutonBasculerManuel" type="Button" parent="CanvasLayer/UIConnexion/VBox"]
+text = "⚙️ Mode manuel (code copier-coller)"
+
+[node name="ConteneurManuel" type="VBoxContainer" parent="CanvasLayer/UIConnexion/VBox"]
+visible = false
+theme_override_constants/separation = 8
+
+[node name="ChampCode" type="LineEdit" parent="CanvasLayer/UIConnexion/VBox/ConteneurManuel"]
+custom_minimum_size = Vector2(0, 44)
+placeholder_text = "Colle ici le code reçu…"
+
+[node name="BoutonValiderManuel" type="Button" parent="CanvasLayer/UIConnexion/VBox/ConteneurManuel"]
+text = "Valider le code manuellement"
+
+[node name="BoutonCopier" type="Button" parent="CanvasLayer/UIConnexion/VBox/ConteneurManuel"]
+visible = false
+text = "Copier le code"
+
+
+[node name="UIJeu" type="Control" parent="CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="BarreCorruption" type="ProgressBar" parent="CanvasLayer/UIJeu"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 320.0
+offset_bottom = 44.0
+mouse_filter = 2
+max_value = 100.0
+show_percentage = false
+
+[node name="LabelCorruption" type="Label" parent="CanvasLayer/UIJeu"]
+offset_left = 20.0
+offset_top = 48.0
+offset_right = 320.0
+offset_bottom = 72.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
+text = "👁️ Corruption de l'Anneau : 0%"
+
+[node name="Boussole" type="Panel" parent="CanvasLayer/UIJeu"]
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -160.0
+offset_top = 16.0
+offset_right = 160.0
+offset_bottom = 56.0
+
+[node name="FlecheBoussole" type="Polygon2D" parent="CanvasLayer/UIJeu/Boussole"]
+position = Vector2(25, 20)
+color = Color(1, 0.8, 0.2, 1)
+polygon = PackedVector2Array(-8, -6, 10, 0, -8, 6, -4, 0)
+
+[node name="LabelBoussole" type="Label" parent="CanvasLayer/UIJeu/Boussole"]
+offset_left = 45.0
+offset_top = 8.0
+offset_right = 310.0
+offset_bottom = 32.0
+theme_override_font_sizes/font_size = 14
+text = "Montagne du Destin : 3600m"
+
+[node name="LabelAllie" type="Label" parent="CanvasLayer/UIJeu"]
+offset_left = 20.0
+offset_top = 75.0
+offset_right = 320.0
+offset_bottom = 98.0
+theme_override_colors/font_color = Color(0.7, 0.9, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
+text = "👥 Allié : 12m"
+
+[node name="BoutonPleinEcranJeu" type="Button" parent="CanvasLayer/UIJeu"]
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -60.0
+offset_top = 18.0
+offset_right = -18.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 18
+text = "⛶"
+
+[node name="BoutonAction" type="Button" parent="CanvasLayer/UIJeu"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -230.0
+offset_top = -180.0
+offset_right = -40.0
+offset_bottom = -90.0
+theme_override_font_sizes/font_size = 18
+
+
+[node name="Joystick" type="Control" parent="CanvasLayer/UIJeu"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -250.0
+offset_right = 230.0
+offset_bottom = -60.0
+script = ExtResource("2")
+
+[node name="Base" type="ColorRect" parent="CanvasLayer/UIJeu/Joystick"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0.12)
+
+[node name="Bouton" type="ColorRect" parent="CanvasLayer/UIJeu/Joystick"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -35.0
+offset_top = -35.0
+offset_right = 35.0
+offset_bottom = 35.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0.35)
+
+[node name="EcranVictoire" type="Control" parent="CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="FondV" type="ColorRect" parent="CanvasLayer/EcranVictoire"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.08, 0.05, 0.85)
+
+[node name="BoiteV" type="VBoxContainer" parent="CanvasLayer/EcranVictoire"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -160.0
+offset_right = 300.0
+offset_bottom = 160.0
+theme_override_constants/separation = 16
+
+[node name="TitreV" type="Label" parent="CanvasLayer/EcranVictoire/BoiteV"]
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+theme_override_font_sizes/font_size = 28
+text = "🏆 VICTOIRE ÉPIQUE !"
+
+[node name="DescV" type="Label" parent="CanvasLayer/EcranVictoire/BoiteV"]
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "L'Anneau Unique a été jeté dans les flammes du Cratère du Destin !
+Les ténèbres s'effondrent, la Terre du Milieu est sauvée grâce à votre coopération !"
+
+[node name="BoutonRejouerVictoire" type="Button" parent="CanvasLayer/EcranVictoire/BoiteV"]
+custom_minimum_size = Vector2(0, 48)
+text = "✨ Rejouer une partie"
+
+[node name="EcranDefaite" type="Control" parent="CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="FondD" type="ColorRect" parent="CanvasLayer/EcranDefaite"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.12, 0.02, 0.02, 0.88)
+
+[node name="BoiteD" type="VBoxContainer" parent="CanvasLayer/EcranDefaite"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -160.0
+offset_right = 300.0
+offset_bottom = 160.0
+theme_override_constants/separation = 16
+
+[node name="TitreD" type="Label" parent="CanvasLayer/EcranDefaite/BoiteD"]
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
+theme_override_font_sizes/font_size = 28
+text = "👁️ L'OMBRE A TRIOMPHÉ..."
+
+[node name="DescD" type="Label" parent="CanvasLayer/EcranDefaite/BoiteD"]
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "La corruption de l'Anneau a atteint 100%.
+L'esprit du Porteur a été submergé par Sauron et l'Anneau lui a échappé."
+
+[node name="BoutonRejouerDefaite" type="Button" parent="CanvasLayer/EcranDefaite/BoiteD"]
+custom_minimum_size = Vector2(0, 48)
+text = "🔄 Réessayer"
+
