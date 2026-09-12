@@ -36,7 +36,9 @@ func _physics_process(delta: float) -> void:
 	_chrono_sync += delta
 	if _chrono_sync >= DELAI_SYNC:
 		_chrono_sync = 0.0
-		_synchroniser.rpc(global_position, invisible, velocity)
+		if not NetworkManager.mode_solo:
+			_synchroniser.rpc(global_position, invisible, velocity)
+
 
 func _animer_flottement(delta: float) -> void:
 	_chrono_anim += delta * 6.0

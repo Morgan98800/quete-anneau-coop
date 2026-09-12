@@ -8,19 +8,21 @@ extends Node2D
 # Références aux nœuds de l'interface (à remplir dans l'éditeur)
 @onready var _ui_connexion: Control = $CanvasLayer/UIConnexion
 @onready var _ui_jeu: Control = $CanvasLayer/UIJeu
-@onready var _label_statut: Label = $CanvasLayer/UIConnexion/VBox/LabelStatut
-@onready var _bouton_creer: Button = $CanvasLayer/UIConnexion/VBox/BoutonCreer
-@onready var _bouton_rejoindre: Button = $CanvasLayer/UIConnexion/VBox/BoutonRejoindre
-@onready var _bouton_basculer_manuel: Button = $CanvasLayer/UIConnexion/VBox/BoutonBasculerManuel
-@onready var _conteneur_manuel: VBoxContainer = $CanvasLayer/UIConnexion/VBox/ConteneurManuel
-@onready var _champ_code: LineEdit = $CanvasLayer/UIConnexion/VBox/ConteneurManuel/ChampCode
-@onready var _bouton_valider_manuel: Button = $CanvasLayer/UIConnexion/VBox/ConteneurManuel/BoutonValiderManuel
-@onready var _bouton_copier: Button = $CanvasLayer/UIConnexion/VBox/ConteneurManuel/BoutonCopier
-@onready var _bouton_plein_ecran: Button = $CanvasLayer/UIConnexion/VBox/BoutonPleinEcran
+@onready var _label_statut: Label = $CanvasLayer/UIConnexion/CadreParcho/VBox/LabelStatut
+@onready var _bouton_solo: Button = $CanvasLayer/UIConnexion/CadreParcho/VBox/BoutonSolo
+@onready var _bouton_creer: Button = $CanvasLayer/UIConnexion/CadreParcho/VBox/BoutonCreer
+@onready var _bouton_rejoindre: Button = $CanvasLayer/UIConnexion/CadreParcho/VBox/BoutonRejoindre
+@onready var _bouton_basculer_manuel: Button = $CanvasLayer/UIConnexion/CadreParcho/VBox/BoutonBasculerManuel
+@onready var _conteneur_manuel: VBoxContainer = $CanvasLayer/UIConnexion/CadreParcho/VBox/ConteneurManuel
+@onready var _champ_code: LineEdit = $CanvasLayer/UIConnexion/CadreParcho/VBox/ConteneurManuel/ChampCode
+@onready var _bouton_valider_manuel: Button = $CanvasLayer/UIConnexion/CadreParcho/VBox/ConteneurManuel/BoutonValiderManuel
+@onready var _bouton_copier: Button = $CanvasLayer/UIConnexion/CadreParcho/VBox/ConteneurManuel/BoutonCopier
+@onready var _bouton_plein_ecran: Button = $CanvasLayer/UIConnexion/CadreParcho/VBox/BoutonPleinEcran
 @onready var _bouton_plein_ecran_jeu: Button = $CanvasLayer/UIJeu/BoutonPleinEcranJeu
 @onready var _barre_corruption: ProgressBar = $CanvasLayer/UIJeu/BarreCorruption
 @onready var _label_corruption: Label = $CanvasLayer/UIJeu/LabelCorruption
 @onready var _bouton_action: Button = $CanvasLayer/UIJeu/BoutonAction
+
 
 @onready var _fleche_boussole: Polygon2D = $CanvasLayer/UIJeu/Boussole/FlecheBoussole
 @onready var _label_boussole: Label = $CanvasLayer/UIJeu/Boussole/LabelBoussole
@@ -63,8 +65,10 @@ func _ready() -> void:
 	Corruption.corruption_max.connect(_sur_corruption_max)
 	
 	# Connexion des boutons de l'interface.
+	_bouton_solo.pressed.connect(_sur_bouton_solo)
 	_bouton_creer.pressed.connect(_sur_bouton_creer_auto)
 	_bouton_rejoindre.pressed.connect(_sur_bouton_rejoindre_auto)
+
 	_bouton_plein_ecran.pressed.connect(_basculer_plein_ecran)
 	_bouton_plein_ecran_jeu.pressed.connect(_basculer_plein_ecran)
 	_bouton_basculer_manuel.pressed.connect(_sur_basculer_manuel)
@@ -90,10 +94,19 @@ func _ready() -> void:
 func _sur_statut_change(texte: String) -> void:
 	_label_statut.text = texte
 
+func _sur_bouton_solo() -> void:
+	_label_statut.text = "Lancement de l'aventure en solitaire..."
+	_bouton_solo.disabled = true
+	_bouton_creer.disabled = true
+	_bouton_rejoindre.disabled = true
+	NetworkManager.lancer_mode_solo()
+
 func _sur_bouton_creer_auto() -> void:
+	_bouton_solo.disabled = true
 	_bouton_creer.disabled = true
 	_bouton_rejoindre.disabled = true
 	NetworkManager.lancer_auto_hote()
+
 
 func _sur_bouton_rejoindre_auto() -> void:
 	_bouton_creer.disabled = true

@@ -242,62 +242,85 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-color = Color(0, 0, 0, 0.65)
+color = Color(0.08, 0.1, 0.14, 0.85)
 
-[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UIConnexion"]
+[node name="CadreParcho" type="Panel" parent="CanvasLayer/UIConnexion"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -280.0
-offset_top = -260.0
-offset_right = 280.0
-offset_bottom = 260.0
-theme_override_constants/separation = 14
+offset_left = -290.0
+offset_top = -320.0
+offset_right = 290.0
+offset_bottom = 320.0
 
-[node name="LabelTitre" type="Label" parent="CanvasLayer/UIConnexion/VBox"]
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/UIConnexion/CadreParcho"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 22.0
+offset_top = 22.0
+offset_right = -22.0
+offset_bottom = -22.0
+theme_override_constants/separation = 12
+
+[node name="LabelTitre" type="Label" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 24
-text = "🗡️ Quête de l'Anneau 🌿
-Coop Mobile"
+theme_override_colors/font_color = Color(1, 0.88, 0.4, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 22
+text = "💍 LA QUÊTE DE L'ANNEAU 💍
+Action-RPG Coopératif"
 
+[node name="Separateur1" type="HSeparator" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 
-[node name="LabelStatut" type="Label" parent="CanvasLayer/UIConnexion/VBox"]
+[node name="LabelStatut" type="Label" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 horizontal_alignment = 1
 autowrap_mode = 2
-text = "Cliquez simplement sur votre personnage pour vous connecter !"
+theme_override_colors/font_color = Color(0.9, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 14
+text = "Choisissez votre rôle pour partir à l'aventure !"
 
-[node name="BoutonCreer" type="Button" parent="CanvasLayer/UIConnexion/VBox"]
-custom_minimum_size = Vector2(0, 50)
+[node name="BoutonSolo" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
+custom_minimum_size = Vector2(0, 52)
+theme_override_colors/font_color = Color(1, 0.95, 0.6, 1)
 theme_override_font_sizes/font_size = 16
-text = "🗡️ Joueur 1 : Porteur (Lancer la partie)"
+text = "⚔️ EXPLORER EN SOLO (Mode Test)"
 
-[node name="BoutonRejoindre" type="Button" parent="CanvasLayer/UIConnexion/VBox"]
+[node name="Separateur2" type="HSeparator" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
+
+[node name="BoutonCreer" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 custom_minimum_size = Vector2(0, 50)
-theme_override_font_sizes/font_size = 16
-text = "🌿 Joueur 2 : Guide (Rejoindre la partie)"
+theme_override_font_sizes/font_size = 15
+text = "🗡️ Joueur 1 : Frodon Sacquet"
 
-[node name="BoutonPleinEcran" type="Button" parent="CanvasLayer/UIConnexion/VBox"]
-custom_minimum_size = Vector2(0, 42)
-text = "⛶ Activer le Plein Écran (Smartphone)"
+[node name="BoutonRejoindre" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
+custom_minimum_size = Vector2(0, 50)
+theme_override_font_sizes/font_size = 15
+text = "🌿 Joueur 2 : Sam Gamegie"
 
-[node name="BoutonBasculerManuel" type="Button" parent="CanvasLayer/UIConnexion/VBox"]
-text = "⚙️ Mode manuel (code copier-coller)"
+[node name="BoutonPleinEcran" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
+custom_minimum_size = Vector2(0, 44)
+text = "⛶ Activer le Plein Écran Mobile"
 
-[node name="ConteneurManuel" type="VBoxContainer" parent="CanvasLayer/UIConnexion/VBox"]
+[node name="BoutonBasculerManuel" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
+text = "⚙️ Mode manuel (code de secours)"
+
+[node name="ConteneurManuel" type="VBoxContainer" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 visible = false
 theme_override_constants/separation = 8
 
-[node name="ChampCode" type="LineEdit" parent="CanvasLayer/UIConnexion/VBox/ConteneurManuel"]
+[node name="ChampCode" type="LineEdit" parent="CanvasLayer/UIConnexion/CadreParcho/VBox/ConteneurManuel"]
 custom_minimum_size = Vector2(0, 44)
 placeholder_text = "Colle ici le code reçu…"
 
-[node name="BoutonValiderManuel" type="Button" parent="CanvasLayer/UIConnexion/VBox/ConteneurManuel"]
+[node name="BoutonValiderManuel" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox/ConteneurManuel"]
 text = "Valider le code manuellement"
 
-[node name="BoutonCopier" type="Button" parent="CanvasLayer/UIConnexion/VBox/ConteneurManuel"]
+[node name="BoutonCopier" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox/ConteneurManuel"]
 visible = false
 text = "Copier le code"
+
 
 
 [node name="UIJeu" type="Control" parent="CanvasLayer"]

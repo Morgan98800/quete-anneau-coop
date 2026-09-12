@@ -55,12 +55,19 @@ var _description_prete := false
 var _description_locale := ""
 
 
-# ------------------------------------------------------------
-# API publique — Mode Automatique (Zéro Code)
-# ------------------------------------------------------------
+var mode_solo := false
+
+## MODE TEST SOLO : lance immédiatement la partie locale sans attendre le réseau.
+func lancer_mode_solo() -> void:
+	mode_solo = true
+	connecte = true
+	est_hote = true
+	joue_porteur = true
+	connexion_etablie.emit()
 
 ## JOUEUR 1 : Porteur — démarre la session et attend automatiquement le Guide.
 func lancer_auto_hote() -> void:
+
 	mode_auto = true
 	_derniere_offre = ""
 	_derniere_reponse = ""
