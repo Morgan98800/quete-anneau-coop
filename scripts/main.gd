@@ -95,6 +95,7 @@ func _sur_statut_change(texte: String) -> void:
 	_label_statut.text = texte
 
 func _sur_bouton_solo() -> void:
+	SonChiptune.jouer_clic()
 	_label_statut.text = "Lancement de l'aventure en solitaire..."
 	_bouton_solo.disabled = true
 	_bouton_creer.disabled = true
@@ -102,6 +103,7 @@ func _sur_bouton_solo() -> void:
 	NetworkManager.lancer_mode_solo()
 
 func _sur_bouton_creer_auto() -> void:
+	SonChiptune.jouer_clic()
 	_bouton_solo.disabled = true
 	_bouton_creer.disabled = true
 	_bouton_rejoindre.disabled = true
@@ -109,14 +111,17 @@ func _sur_bouton_creer_auto() -> void:
 
 
 func _sur_bouton_rejoindre_auto() -> void:
+	SonChiptune.jouer_clic()
 	_bouton_creer.disabled = true
 	_bouton_rejoindre.disabled = true
 	NetworkManager.lancer_auto_invite()
 
 func _sur_basculer_manuel() -> void:
+	SonChiptune.jouer_clic()
 	_conteneur_manuel.visible = not _conteneur_manuel.visible
 
 func _sur_bouton_valider_manuel() -> void:
+	SonChiptune.jouer_clic()
 	var code := _champ_code.text.strip_edges()
 	if code.is_empty():
 		_label_statut.text = "Colle d'abord un code d'invitation !"
@@ -249,19 +254,28 @@ func _sur_corruption_changee(valeur: float) -> void:
 func _sur_corruption_max() -> void:
 	if not _partie_terminee and NetworkManager.connecte:
 		_partie_terminee = true
-		_declencher_defaite.rpc()
+		if NetworkManager.mode_solo:
+			_declencher_defaite()
+		else:
+			_declencher_defaite.rpc()
 
 func _sur_rejouer_clic() -> void:
-	_recommencer_partie.rpc()
+	SonChiptune.jouer_clic()
+	if NetworkManager.mode_solo:
+		_recommencer_partie()
+	else:
+		_recommencer_partie.rpc()
 
 @rpc("any_peer", "call_local", "reliable")
 func _declencher_victoire() -> void:
 	_partie_terminee = true
+	SonChiptune.jouer_victoire()
 	_ecran_victoire.show()
 
 @rpc("any_peer", "call_local", "reliable")
 func _declencher_defaite() -> void:
 	_partie_terminee = true
+	SonChiptune.jouer_defaite()
 	_ecran_defaite.show()
 
 @rpc("any_peer", "call_local", "reliable")
@@ -306,11 +320,19 @@ func _process(_delta: float) -> void:
 			var dist_allie := _porteur.global_position.distance_to(_guide.global_position)
 			_label_allie.text = "👥 Allié : %d m" % int(dist_allie)
 			
-			# Vérification de victoire : les deux joueurs doivent atteindre le cratère
+			# Vérification de victoire : les deux joueurs doivent atteindre le cratère (ou Frodon en solo)
 			if NetworkManager.est_hote and not _partie_terminee:
-				if _porteur.global_position.distance_to(DESTINATION) < 180.0 \
-						and _guide.global_position.distance_to(DESTINATION) < 180.0:
-					_declencher_victoire.rpc()
+				var condition_victoire: bool = false
+				if NetworkManager.mode_solo:
+					condition_victoire = _porteur.global_position.distance_to(DESTINATION) < 180.0
+				else:
+					condition_victoire = (_porteur.global_position.distance_to(DESTINATION) < 180.0 \
+							and _guide.global_position.distance_to(DESTINATION) < 180.0)
+				if condition_victoire:
+					if NetworkManager.mode_solo:
+						_declencher_victoire()
+					else:
+						_declencher_victoire.rpc()
 
 	# Pont Web de signalisation (reprise de réponse manuelle si besoin)
 	if not OS.has_feature("web"):

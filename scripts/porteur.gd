@@ -14,7 +14,11 @@ var _chrono_sync: float = 0.0
 @onready var _aura_spectrale: Polygon2D = $AuraSpectrale
 @onready var _ombre: Polygon2D = $Ombre
 
+@onready var _sprite_gba: Sprite2D = $Visuel/SpriteGBA
+
 var _chrono_anim: float = 0.0
+var _direction_row: int = 0 # 0=Down, 1=Left, 2=Right, 3=Up
+var _pas_timer: float = 0.0
 
 func _ready() -> void:
 	# L'hôte (joueur 1) contrôle le Porteur.
@@ -22,7 +26,7 @@ func _ready() -> void:
 	_appliquer_apparence()
 
 func _physics_process(delta: float) -> void:
-	_animer_flottement(delta)
+	_animer_sprite(delta)
 	
 	if not is_multiplayer_authority() or not NetworkManager.connecte:
 		return
@@ -40,24 +44,27 @@ func _physics_process(delta: float) -> void:
 			_synchroniser.rpc(global_position, invisible, velocity)
 
 
-func _animer_flottement(delta: float) -> void:
+func _animer_sprite(delta: float) -> void:
 	_chrono_anim += delta * 6.0
 	# Pulsation douce de l'Anneau
 	var pulsation := 1.0 + 0.25 * sin(_chrono_anim * 0.8)
 	if _halo_anneau:
 		_halo_anneau.scale = Vector2(pulsation, pulsation)
 	
-	# Animation de marche si en mouvement
+	# Direction et animation de pas GBA
 	if velocity.length() > 10.0:
-		_visuel.position.y = sin(_chrono_anim * 2.0) * 2.5
-		_visuel.rotation = sin(_chrono_anim) * 0.08
-		if velocity.x < -10.0:
-			_visuel.scale.x = -1.0
-		elif velocity.x > 10.0:
-			_visuel.scale.x = 1.0
+		if abs(velocity.x) > abs(velocity.y):
+			_direction_row = 1 if velocity.x < 0 else 2
+		else:
+			_direction_row = 0 if velocity.y > 0 else 3
+		_pas_timer += delta * 7.5
+		var col := int(_pas_timer) % 4
+		if _sprite_gba:
+			_sprite_gba.frame = _direction_row * 4 + col
 	else:
-		_visuel.position.y = move_toward(_visuel.position.y, 0.0, delta * 10.0)
-		_visuel.rotation = move_toward(_visuel.rotation, 0.0, delta * 5.0)
+		_pas_timer = 0.0
+		if _sprite_gba:
+			_sprite_gba.frame = _direction_row * 4
 
 	# Pulsation de l'aura spectrale
 	if invisible and _aura_spectrale:
@@ -67,6 +74,7 @@ func basculer_invisibilite() -> void:
 	if not is_multiplayer_authority() or not NetworkManager.connecte:
 		return
 	invisible = not invisible
+	SonChiptune.jouer_anneau()
 	_appliquer_apparence()
 	Corruption.set_influence(invisible)
 

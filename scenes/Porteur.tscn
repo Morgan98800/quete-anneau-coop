@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/porteur.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/personnages/frodon.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personnages/frodon_spritesheet.png" id="2"]
 [ext_resource type="Script" path="res://scripts/lumiere_pixel.gd" id="3"]
 
 [sub_resource type="CircleShape2D" id="circle"]
@@ -29,6 +29,9 @@ polygon = PackedVector2Array(0, -28, 20, -19, 26, 0, 20, 19, 0, 28, -20, 19, -26
 texture_filter = 1
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("2")
+hframes = 4
+vframes = 4
+frame = 0
 
 [node name="Anneau" type="Node2D" parent="Visuel"]
 position = Vector2(1, 1)

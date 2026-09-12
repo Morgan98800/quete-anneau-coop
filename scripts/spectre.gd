@@ -17,9 +17,11 @@ var _chrono_anim: float = 0.0
 var _etourdi: float = 0.0
 
 @onready var _visuel: Node2D = $Visuel
-@onready var _yeux: Node2D = $Visuel/Yeux
 @onready var _alerte: Label = $Alerte
 @onready var _zone_detection: Area2D = $ZoneDetection
+@onready var _lumiere_oeil: PointLight2D = get_node_or_null("Visuel/LumiereOeil")
+
+var _en_alerte: bool = false
 
 func _ready() -> void:
 	add_to_group("spectres")
@@ -52,18 +54,26 @@ func _physics_process(delta: float) -> void:
 	if _porteur and is_instance_valid(_porteur):
 		if not _porteur.invisible:
 			# Alerte ! Le Porteur est visible
+			if not _en_alerte:
+				_en_alerte = true
+				SonChiptune.jouer_alerte()
 			_alerte.text = "👁️"
 			_alerte.show()
-			_yeux.modulate = Color(1.5, 0.2, 0.2, 1.0)
+			if _lumiere_oeil:
+				_lumiere_oeil.intensite = 1.6
 			# Accroît la corruption
 			Corruption.valeur = minf(Corruption.MAX, Corruption.valeur + 12.0 * delta)
 			Corruption.corruption_changee.emit(Corruption.valeur)
 		else:
+			_en_alerte = false
 			_alerte.hide()
-			_yeux.modulate = Color(0.8, 0.3, 0.3, 0.7)
+			if _lumiere_oeil:
+				_lumiere_oeil.intensite = 0.85
 	else:
+		_en_alerte = false
 		_alerte.hide()
-		_yeux.modulate = Color(0.8, 0.3, 0.3, 0.7)
+		if _lumiere_oeil:
+			_lumiere_oeil.intensite = 0.85
 
 	# Patrouille autonome
 	var vers_cible := (_cible_actuelle - global_position)

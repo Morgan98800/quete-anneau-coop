@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/joystick.gd" id="2"]
@@ -7,8 +7,16 @@
 [ext_resource type="PackedScene" path="res://scenes/Spectre.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/dialogues/BoiteDialogue.tscn" id="6"]
 [ext_resource type="Script" path="res://scripts/lumiere_pixel.gd" id="7"]
+[ext_resource type="FontFile" path="res://assets/fonts/pixel_font.ttf" id="8"]
+[ext_resource type="Texture2D" path="res://assets/ui/cadre_dialogue_gba.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decors/arbre_pixel.png" id="10"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decors/buisson_pixel.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decors/rocher_pixel.png" id="12"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decors/maison_hobbit.png" id="13"]
+[ext_resource type="Texture2D" path="res://assets/sprites/decors/herbe_fleurs.png" id="14"]
 
 [node name="Main" type="Node2D"]
+
 
 
 script = ExtResource("1")
@@ -53,6 +61,24 @@ position = Vector2(440, 440)
 color = Color(0.35, 0.28, 0.18, 0.8)
 polygon = PackedVector2Array(-90, -50, 90, -50, 100, 70, -100, 70)
 
+[node name="MaisonHobbit" type="Sprite2D" parent="Monde/CampDepart"]
+texture_filter = 1
+position = Vector2(-75, -20)
+scale = Vector2(2.2, 2.2)
+texture = ExtResource("13")
+
+[node name="Fleurs1" type="Sprite2D" parent="Monde/CampDepart"]
+texture_filter = 1
+position = Vector2(-20, 35)
+scale = Vector2(2, 2)
+texture = ExtResource("14")
+
+[node name="Fleurs2" type="Sprite2D" parent="Monde/CampDepart"]
+texture_filter = 1
+position = Vector2(55, 30)
+scale = Vector2(2, 2)
+texture = ExtResource("14")
+
 [node name="FeuDeCamp" type="Polygon2D" parent="Monde/CampDepart"]
 position = Vector2(0, 10)
 color = Color(1, 0.6, 0.1, 0.8)
@@ -80,37 +106,70 @@ offset_top = -85.0
 offset_right = 90.0
 offset_bottom = -60.0
 theme_override_colors/font_color = Color(0.85, 0.95, 0.75, 1)
-text = "🏡 Havre de Paix (Départ)"
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 9
+text = "Havre de Paix (Depart)"
 horizontal_alignment = 1
 
 [node name="DecorsForet" type="Node2D" parent="Monde"]
+y_sort_enabled = true
 
-[node name="Arbre1" type="Polygon2D" parent="Monde/DecorsForet"]
+[node name="Arbre1" type="Sprite2D" parent="Monde/DecorsForet"]
+texture_filter = 1
 position = Vector2(300, 260)
-color = Color(0.08, 0.28, 0.12, 1)
-polygon = PackedVector2Array(0, -50, 38, -10, 24, -10, 44, 25, -44, 25, -24, -10, -38, -10)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("10")
 
-[node name="Arbre2" type="Polygon2D" parent="Monde/DecorsForet"]
+[node name="Arbre2" type="Sprite2D" parent="Monde/DecorsForet"]
+texture_filter = 1
 position = Vector2(620, 280)
-color = Color(0.1, 0.32, 0.15, 1)
-polygon = PackedVector2Array(0, -55, 42, -12, 26, -12, 48, 28, -48, 28, -26, -12, -42, -12)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("10")
 
-[node name="Arbre3" type="Polygon2D" parent="Monde/DecorsForet"]
+[node name="Arbre3" type="Sprite2D" parent="Monde/DecorsForet"]
+texture_filter = 1
 position = Vector2(250, 600)
-color = Color(0.09, 0.26, 0.12, 1)
-polygon = PackedVector2Array(0, -48, 36, -10, 22, -10, 40, 24, -40, 24, -22, -10, -36, -10)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("10")
 
-[node name="Arbre4" type="Polygon2D" parent="Monde/DecorsForet"]
+[node name="Arbre4" type="Sprite2D" parent="Monde/DecorsForet"]
+texture_filter = 1
 position = Vector2(850, 480)
-color = Color(0.1, 0.3, 0.14, 1)
-polygon = PackedVector2Array(0, -52, 40, -10, 25, -10, 45, 26, -45, 26, -25, -10, -40, -10)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("10")
 
-[node name="Arbre5" type="Polygon2D" parent="Monde/DecorsForet"]
+[node name="Arbre5" type="Sprite2D" parent="Monde/DecorsForet"]
+texture_filter = 1
 position = Vector2(680, 880)
-color = Color(0.08, 0.28, 0.12, 1)
-polygon = PackedVector2Array(0, -50, 38, -10, 24, -10, 44, 25, -44, 25, -24, -10, -38, -10)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("10")
+
+[node name="Arbre6" type="Sprite2D" parent="Monde/DecorsForet"]
+texture_filter = 1
+position = Vector2(380, 760)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("10")
+
+[node name="Buisson1" type="Sprite2D" parent="Monde/DecorsForet"]
+texture_filter = 1
+position = Vector2(490, 520)
+scale = Vector2(2, 2)
+texture = ExtResource("11")
+
+[node name="Buisson2" type="Sprite2D" parent="Monde/DecorsForet"]
+texture_filter = 1
+position = Vector2(720, 640)
+scale = Vector2(2, 2)
+texture = ExtResource("11")
+
+[node name="Buisson3" type="Sprite2D" parent="Monde/DecorsForet"]
+texture_filter = 1
+position = Vector2(340, 410)
+scale = Vector2(2, 2)
+texture = ExtResource("11")
 
 [node name="DecorsRuines" type="Node2D" parent="Monde"]
+y_sort_enabled = true
 
 [node name="Pilier1" type="Polygon2D" parent="Monde/DecorsRuines"]
 position = Vector2(1380, 1250)
@@ -127,15 +186,23 @@ position = Vector2(1515, 1205)
 color = Color(0.48, 0.5, 0.46, 1)
 polygon = PackedVector2Array(-150, -10, 150, -10, 150, 10, -150, 10)
 
-[node name="Rocher1" type="Polygon2D" parent="Monde/DecorsRuines"]
+[node name="Rocher1" type="Sprite2D" parent="Monde/DecorsRuines"]
+texture_filter = 1
 position = Vector2(1750, 1900)
-color = Color(0.32, 0.33, 0.3, 1)
-polygon = PackedVector2Array(-35, -15, 0, -35, 45, -10, 35, 30, -25, 28)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("12")
 
-[node name="Rocher2" type="Polygon2D" parent="Monde/DecorsRuines"]
+[node name="Rocher2" type="Sprite2D" parent="Monde/DecorsRuines"]
+texture_filter = 1
 position = Vector2(1300, 1600)
-color = Color(0.3, 0.32, 0.29, 1)
-polygon = PackedVector2Array(-40, -10, -10, -30, 35, -5, 25, 25, -30, 20)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("12")
+
+[node name="Rocher3" type="Sprite2D" parent="Monde/DecorsRuines"]
+texture_filter = 1
+position = Vector2(1580, 1450)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("12")
 
 [node name="DecorsVolcan" type="Node2D" parent="Monde"]
 
@@ -244,31 +311,37 @@ anchor_bottom = 1.0
 mouse_filter = 2
 color = Color(0.08, 0.1, 0.14, 0.85)
 
-[node name="CadreParcho" type="Panel" parent="CanvasLayer/UIConnexion"]
+[node name="CadreParcho" type="NinePatchRect" parent="CanvasLayer/UIConnexion"]
+texture_filter = 1
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -290.0
-offset_top = -320.0
+offset_top = -330.0
 offset_right = 290.0
-offset_bottom = 320.0
+offset_bottom = 330.0
+texture = ExtResource("9")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 8
+patch_margin_bottom = 8
 
 [node name="VBox" type="VBoxContainer" parent="CanvasLayer/UIConnexion/CadreParcho"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 22.0
-offset_top = 22.0
-offset_right = -22.0
-offset_bottom = -22.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
 theme_override_constants/separation = 12
 
 [node name="LabelTitre" type="Label" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("8")
 theme_override_colors/font_color = Color(1, 0.88, 0.4, 1)
-theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.05, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 14
+theme_override_constants/line_spacing = 6
 text = "💍 LA QUÊTE DE L'ANNEAU 💍
 Action-RPG Coopératif"
 
@@ -277,31 +350,39 @@ Action-RPG Coopératif"
 [node name="LabelStatut" type="Label" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 horizontal_alignment = 1
 autowrap_mode = 2
+theme_override_fonts/font = ExtResource("8")
 theme_override_colors/font_color = Color(0.9, 0.95, 0.85, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 10
+theme_override_constants/line_spacing = 4
 text = "Choisissez votre rôle pour partir à l'aventure !"
 
 [node name="BoutonSolo" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 custom_minimum_size = Vector2(0, 52)
+theme_override_fonts/font = ExtResource("8")
 theme_override_colors/font_color = Color(1, 0.95, 0.6, 1)
-theme_override_font_sizes/font_size = 16
-text = "⚔️ EXPLORER EN SOLO (Mode Test)"
+theme_override_font_sizes/font_size = 12
+text = "⚔️ MODE TEST SOLO"
 
 [node name="Separateur2" type="HSeparator" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 
 [node name="BoutonCreer" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 custom_minimum_size = Vector2(0, 50)
-theme_override_font_sizes/font_size = 15
-text = "🗡️ Joueur 1 : Frodon Sacquet"
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 11
+text = "🗡️ J1 : Frodon Sacquet"
 
 [node name="BoutonRejoindre" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 custom_minimum_size = Vector2(0, 50)
-theme_override_font_sizes/font_size = 15
-text = "🌿 Joueur 2 : Sam Gamegie"
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 11
+text = "🌿 J2 : Sam Gamegie"
 
 [node name="BoutonPleinEcran" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 custom_minimum_size = Vector2(0, 44)
-text = "⛶ Activer le Plein Écran Mobile"
+theme_override_fonts/font = ExtResource("8")
+theme_override_font_sizes/font_size = 10
+text = "⛶ Plein Écran Mobile"
+
 
 [node name="BoutonBasculerManuel" type="Button" parent="CanvasLayer/UIConnexion/CadreParcho/VBox"]
 text = "⚙️ Mode manuel (code de secours)"

@@ -67,4 +67,3 @@ func _mettre_a_jour(position_ecran: Vector2) -> void:
 
 func _positionner_bouton(vecteur: Vector2) -> void:
 	_bouton.position = size / 2.0 - _bouton.size / 2.0 + vecteur
-
