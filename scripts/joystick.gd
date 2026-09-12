@@ -17,18 +17,34 @@ var _index_doigt: int = -1
 func _ready() -> void:
 	_positionner_bouton(Vector2.ZERO)
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		var touch_event := event as InputEventScreenTouch
 		if touch_event.pressed and _index_doigt == -1 and _contient(touch_event.position):
 			_index_doigt = touch_event.index
 			_mettre_a_jour(touch_event.position)
+			get_viewport().set_input_as_handled()
 		elif not touch_event.pressed and touch_event.index == _index_doigt:
 			_relacher()
+			get_viewport().set_input_as_handled()
 	elif event is InputEventScreenDrag:
 		var drag_event := event as InputEventScreenDrag
 		if drag_event.index == _index_doigt:
 			_mettre_a_jour(drag_event.position)
+			get_viewport().set_input_as_handled()
+	elif event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.button_index == MOUSE_BUTTON_LEFT:
+			if mouse_event.pressed and _index_doigt == -1 and _contient(mouse_event.position):
+				_index_doigt = 99
+				_mettre_a_jour(mouse_event.position)
+			elif not mouse_event.pressed and _index_doigt == 99:
+				_relacher()
+	elif event is InputEventMouseMotion:
+		var motion_event := event as InputEventMouseMotion
+		if _index_doigt == 99:
+			_mettre_a_jour(motion_event.position)
+
 
 func _relacher() -> void:
 	_index_doigt = -1
